@@ -16,7 +16,7 @@
             
             <div class="gender-switch">
                 <label class="switch">
-                    <input type="checkbox" id="genderToggle">
+                    <input type="checkbox" id="genderToggle" onchange="updateCharacterImage();">
                     <span class="slider">
                         <span class="gender-symbol">♂</span>
                     </span>
@@ -56,16 +56,17 @@
                 <h3>Character Setup</h3>
                 <div class="setup-row">
                     <label>Base Level:</label>
-                    <input type="number" id="baseLevel" value="1" min="1" max="99">
+                    <input type="number" id="baseLevel" value="1" min="1" max="99" onchange="updateStats();">
                 </div>
 
                 <div class="setup-row">
                     <label>Job Level:</label>
-                    <input type="number" id="jobLevel" value="1" min="1" max="50">
+                    <input type="number" id="jobLevel" value="1" min="1" max="50" onchange="updateStats();">
                 </div>
+
                 <div class="setup-row">
                     <label>Job:</label>
-                    <select id="job">
+                    <select id="job" onchange="updateCharacterImage(); updateWeaponOptions(); updateStats();">
                         <option>Novice</option>
                         <option>Swordsman</option>
                         <option>Mage</option>
@@ -75,15 +76,10 @@
                         <option>Merchant</option>
                     </select>
                 </div>
+
                 <div class="setup-row">
                     <label>Weapon:</label>
-                    <select id="weapon">
-                        <option>Hand</option>
-                        <option>Sword</option>
-                        <option>Bow</option>
-                        <option>Staff</option>
-                        <option>Dagger</option>
-                    </select>
+                    <select id="weapon" onchange="updateStats();"></select>
                 </div>
             </div>
 
@@ -103,12 +99,42 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td>STR</td><td><input type="number" id="str" value="1" min="1"></td><td id="strReq">2</td><td id="strBonus">0</td></tr>
-                            <tr><td>AGI</td><td><input type="number" id="agi" value="1" min="1"></td><td id="agiReq">2</td><td id="agiBonus">0</td></tr>
-                            <tr><td>VIT</td><td><input type="number" id="vit" value="1" min="1"></td><td id="vitReq">2</td><td id="vitBonus">0</td></tr>
-                            <tr><td>INT</td><td><input type="number" id="int" value="1" min="1"></td><td id="intReq">2</td><td id="intBonus">0</td></tr>
-                            <tr><td>DEX</td><td><input type="number" id="dex" value="1" min="1"></td><td id="dexReq">2</td><td id="dexBonus">0</td></tr>
-                            <tr><td>LUK</td><td><input type="number" id="luk" value="1" min="1"></td><td id="lukReq">2</td><td id="lukBonus">0</td></tr>
+                            <tr>
+                                <td>STR</td>
+                                <td><input type="number" id="str" value="1" min="1" onchange="updateStats();"></td>
+                                <td id="strReq">2</td>
+                                <td id="strBonus">0</td>
+                            </tr>
+                            <tr>
+                                <td>AGI</td>
+                                <td><input type="number" id="agi" value="1" min="1" onchange="updateStats();"></td>
+                                <td id="agiReq">2</td>
+                                <td id="agiBonus">0</td>
+                            </tr>
+                            <tr>
+                                <td>VIT</td>
+                                <td><input type="number" id="vit" value="1" min="1" onchange="updateStats();"></td>
+                                <td id="vitReq">2</td>
+                                <td id="vitBonus">0</td>
+                            </tr>
+                            <tr>
+                                <td>INT</td>
+                                <td><input type="number" id="int" value="1" min="1" onchange="updateStats();"></td>
+                                <td id="intReq">2</td>
+                                <td id="intBonus">0</td>
+                            </tr>
+                            <tr>
+                                <td>DEX</td>
+                                <td><input type="number" id="dex" value="1" min="1" onchange="updateStats();"></td>
+                                <td id="dexReq">2</td>
+                                <td id="dexBonus">0</td>
+                            </tr>
+                            <tr>
+                                <td>LUK</td>
+                                <td><input type="number" id="luk" value="1" min="1" onchange="updateStats();"></td>
+                                <td id="lukReq">2</td>
+                                <td id="lukBonus">0</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -123,22 +149,19 @@
                                 <tr>
                                     <th><img src="icons/atk.png" class="stat-icon"> ATK</th>
                                     <td id="atk">1 + 0</td>
-                                    </tr>
-                                    
-                                    <tr>
+                                </tr>
+                                <tr>
                                     <th><img src="icons/matk.png" class="stat-icon"> MATK</th>
                                     <td id="matk">1~1</td>
-                                    </tr>
-                                    
-                                    <tr>
+                                </tr>
+                                <tr>
                                     <th><img src="icons/hit.png" class="stat-icon"> HIT</th>
                                     <td id="hit">2</td>
-                                    </tr>
-                                    
-                                    <tr>
+                                </tr>
+                                <tr>
                                     <th><img src="icons/crit.png" class="stat-icon"> CRIT</th>
                                     <td id="critical">1</td>
-                                    </tr>
+                                </tr>
                             </tbody>
                         </table>
                         <!-- Right Column -->
@@ -146,21 +169,20 @@
                             <tbody>
                                 <tr>
                                     <th><img src="icons/def.png" class="stat-icon"> DEF</th>
-                                    <td id="def">0 + 0</td>
-                                    </tr>
-                                    
-                                    <tr>
+                                    <td id="def">0 + 1</td>
+                                </tr>
+                                <tr>
                                     <th><img src="icons/mdef.png" class="stat-icon"> MDEF</th>
-                                    <td id="mdef">0 + 0</td>
-                                    </tr>
-                                <th><img src="icons/flee.png" class="stat-icon"> FLEE</th>
-                                    <td id="flee">0 + 0</td>
-                                    </tr>
-                                    
-                                    <tr>
+                                    <td id="mdef">0 + 1</td>
+                                </tr>
+                                <tr>
+                                    <th><img src="icons/flee.png" class="stat-icon"> FLEE</th>
+                                    <td id="flee">0 + 1</td>
+                                </tr>
+                                <tr>
                                     <th><img src="icons/aspd.png" class="stat-icon"> ASPD</th>
-                                    <td id="aspd">0 + 0</td>
-                                    </tr>
+                                    <td id="aspd">0</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -187,5 +209,12 @@
 </div>
 
 <script src="script.js"></script>
+<script>
+    window.onload = function() {
+        updateWeaponOptions();
+        updateCharacterImage();
+        updateStats();
+    }
+</script>
 </body>
 </html>
