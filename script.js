@@ -11,10 +11,8 @@ function updateCharacterImage() {
 
     if (genderSymbol) {
         genderSymbol.textContent = isFemale ? "♀" : "♂";
-
         genderSymbol.classList.remove("male-icon", "female-icon");
         genderSymbol.classList.add(isFemale ? "female-icon" : "male-icon");
-
         genderSymbol.classList.remove("bounce");
         void genderSymbol.offsetWidth;
         genderSymbol.classList.add("bounce");
@@ -26,7 +24,6 @@ function updateCharacterImage() {
 
     if (characterGif) {
         characterGif.style.opacity = 0;
-
         setTimeout(() => {
             characterGif.src = gifSrc;
             characterGif.style.opacity = 1;
@@ -72,9 +69,6 @@ const jobData={
     Merchant:{hpFactor:9,spFactor:3}
 };
 
-// ===============================
-// JOB WEAPONS
-// ===============================
 const jobWeapons={
     Novice:["Hand","Dagger","One-handed Sword","One-handed Axe","One-handed Mace","Two-handed Mace","Rod & Staff","Two-handed Staff"],
     Swordsman:["Hand","Dagger","One-handed Sword","Two-handed Sword","One-handed Spear","Two-handed Spear","One-handed Axe","Two-handed Axe","One-handed Mace","Two-handed Mace"],
@@ -86,41 +80,29 @@ const jobWeapons={
 };
 
 // ===============================
-// WEAPON BASE ASPD
+// BTBA MATRIX (Base Time Between Attacks)
 // ===============================
-const weaponDelay = {
-    "Hand": 50,
-    "Dagger": 65,
-    "One-handed Sword": 70,
-    "One-handed Axe": 80,
-    "One-handed Mace": 70,
-    "Two-handed Mace": 70,
-    "Rod & Staff": 65,
-    "Two-handed Staff": 65,
-    "Bow": 70,
-    "Staff": 60,
-    "One-handed Spear": 70,
-    "Two-handed Spear": 75,
-    "Two-handed Sword": 80,
-    "Two-handed Axe": 80
-};  
+const jobWeaponBTBA = {
+    "Novice":   { "Hand": 1.0, "Dagger": 1.3, "One-handed Sword": 1.4,"One-handed Axe": 1.6, "One-handed Mace": 1.4, "Two-handed Mace": 1.4, "Rod & Staff": 1.3, "Two-handed Staff": 1.3},
+    "Swordsman":{ "Hand": 0.8, "Dagger": 1.0, "One-handed Sword": 1.1, "Two-handed Sword": 1.2, "One-handed Spear": 1.3, "Two-handed Spear": 1.4, "One-handed Axe": 1.4, "Two-handed Axe": 1.5, "One-handed Mace": 1.3, "Two-handed Mace": 1.4 },
+    "Mage":     { "Hand": 1.0, "Dagger": 1.2, "Rod & Staff": 1.4, "Two-handed Staff": 1.4},
+    "Archer":   { "Hand": 0.8, "Dagger": 1.2, "Bow": 1.4 },
+    "Thief":    { "Hand": 0.8, "Dagger": 1.0, "One-handed Sword": 1.3, "Bow": 1.6},
+    "Acolyte":  { "Hand": 0.8, "One-handed Mace": 1.2, "Two-handed Mace": 1.2, "Rod & Staff": 1.2, "Two-handed Staff": 1.2},
+    "Merchant": { "Hand": 0.8, "Dagger": 1.2, "One-handed Sword": 1.4, "One-handed Axe": 1.4, "Two-handed Axe": 1.5, "One-handed Mace": 1.4, "Two-handed Mace": 1.4}
+};
 
-function calculateASPD(weapon, agi, dex) {
-    let WD = weaponDelay[weapon] || 50;
+function calculateASPD(job, weapon, agi, dex) {
+    const btba = (jobWeaponBTBA[job] && jobWeaponBTBA[job][weapon]) ? jobWeaponBTBA[job][weapon] : 1.0;
+    let WD = 50 * btba; // Official Base Weapon Delay
 
-    // Official formula: round intermediate
     let delayReductionAGI = Math.round(WD * agi / 25);
     let delayReductionDEX = Math.round(WD * dex / 100);
 
     let adjustedDelay = WD - Math.floor((delayReductionAGI + delayReductionDEX) / 10);
-
     let aspd = 200 - adjustedDelay;
 
-    // Cap to official max/min
-    if (aspd > 190) aspd = 190;
-    if (aspd < 0) aspd = 0;
-
-    return aspd;
+    return Math.min(Math.max(aspd, 0), 190);
 }
 
 // ===============================
@@ -129,11 +111,8 @@ function calculateASPD(weapon, agi, dex) {
 function updateWeaponOptions(){
     const job=document.getElementById("job").value;
     const weaponSelect=document.getElementById("weapon");
-
     weaponSelect.innerHTML="";
-
     const allowed=jobWeapons[job]||["Hand"];
-
     allowed.forEach(w=>{
         let option=document.createElement("option");
         option.value=w;
@@ -146,29 +125,16 @@ function updateWeaponOptions(){
 // MAIN STAT CALCULATION
 // ===============================
 function updateStats(){
-
     let level = parseInt(document.getElementById("baseLevel").value) || 1;
-    if(level < 1) level = 1;
-    if(level > 99) level = 99;
-    document.getElementById("baseLevel").value = level;
-
-    let jobLevel = parseInt(document.getElementById("jobLevel").value) || 1;
-    if(jobLevel < 1) jobLevel = 1;
-    if(jobLevel > 50) jobLevel = 50;
-    document.getElementById("jobLevel").value = jobLevel;
-
+    let job = document.getElementById("job").value;
+    let weapon = document.getElementById("weapon").value;
     let str=parseInt(document.getElementById("str").value)||1;
     let agi=parseInt(document.getElementById("agi").value)||1;
     let vit=parseInt(document.getElementById("vit").value)||1;
     let intStat=parseInt(document.getElementById("int").value)||1;
     let dex=parseInt(document.getElementById("dex").value)||1;
     let luk=parseInt(document.getElementById("luk").value)||1;
-    let job=document.getElementById("job").value;
-    let weapon=document.getElementById("weapon").value;
 
-    // ===============================
-    // STAT COST DISPLAY
-    // ===============================
     document.getElementById("strReq").innerText=getStatCost(str);
     document.getElementById("agiReq").innerText=getStatCost(agi);
     document.getElementById("vitReq").innerText=getStatCost(vit);
@@ -176,107 +142,36 @@ function updateStats(){
     document.getElementById("dexReq").innerText=getStatCost(dex);
     document.getElementById("lukReq").innerText=getStatCost(luk);
 
-    // ===============================
-    // STAT POINTS
-    // ===============================
     let totalPoints=getTotalStatPoints(level);
-
-    let spentPoints=
-        getTotalCost(str)+
-        getTotalCost(agi)+
-        getTotalCost(vit)+
-        getTotalCost(intStat)+
-        getTotalCost(dex)+
-        getTotalCost(luk);
-
+    let spentPoints=getTotalCost(str)+getTotalCost(agi)+getTotalCost(vit)+getTotalCost(intStat)+getTotalCost(dex)+getTotalCost(luk);
     document.getElementById("statusPoints").innerText=Math.max(totalPoints-spentPoints,0);
 
-    // ===============================
-    // ATK
-    // ===============================
-    let atkBase = str + Math.floor(Math.pow(Math.floor(str/10),2)); // STR bonus squared
-    let atkBonus = 0;
-    if(["Archer","Thief"].includes(job)) atkBonus = Math.floor(dex/5); // Bow/Dex bonus
-    else atkBonus = Math.floor(dex/5) + Math.floor(luk/5); // Melee bonus
+    let atkBase = str + Math.floor(Math.pow(Math.floor(str/10),2));
+    let atkBonus = ["Archer","Thief"].includes(job) ? Math.floor(dex/5) : Math.floor(dex/5) + Math.floor(luk/5);
     document.getElementById("atk").innerText = atkBase + " + " + atkBonus;
 
-    // ===============================
-    // MATK
-    // ===============================
     let matkMin = intStat + Math.floor(Math.pow(Math.floor(intStat/7),2));
     let matkMax = intStat + Math.floor(Math.pow(Math.floor(intStat/5),2));
     document.getElementById("matk").innerText = matkMin + "~" + matkMax;
 
-    // ===============================
-    // HIT / CRIT
-    // ===============================
     document.getElementById("hit").innerText = level + dex;
     document.getElementById("critical").innerText = Math.floor(luk*0.3)+1;
+    document.getElementById("def").innerText = "0 + " + Math.floor(vit*0.8);
+    document.getElementById("mdef").innerText = "0 + " + intStat;
+    document.getElementById("flee").innerText = (level + agi) + " + " + (1 + Math.floor(luk/5));
 
-    // ===============================
-    // DEF / MDEF
-    // ===============================
-    let vitDef = Math.floor(vit*0.8); // Soft DEF scaling
-    document.getElementById("def").innerText = "0 + " + vitDef;
+    document.getElementById("aspd").innerText = calculateASPD(job, weapon, agi, dex);
 
-    let intMdef = intStat; // Soft MDEF scaling
-    document.getElementById("mdef").innerText = "0 + " + intMdef;
-
-    // ===============================
-    // FLEE
-    // ===============================
-    let flee = level + agi;
-    let perfectDodge = 1 + Math.floor(luk/5); // Corrected from /10
-    document.getElementById("flee").innerText = flee + " + " + perfectDodge;
-
-    // ===============================
-    // ASPD
-    // ===============================
-    // ===============================
-    
-    let aspd = calculateASPD(weapon, agi, dex);
-    document.getElementById("aspd").innerText = aspd;
-
-    // ===============================
-    // EXTRA STATS
-    // ===============================
-    let weight = str*30;
-
-    // ===============================
-    // HP / SP
-    // ===============================
     let jobInfo = jobData[job] || jobData["Novice"];
-
-    let baseHP = 35 + level*jobInfo.hpFactor;
-    let maxHP = Math.floor(baseHP*(1 + vit*0.008)); // 0.8% per VIT
-
-    let baseSP = 10 + level*jobInfo.spFactor;
-    let maxSP = Math.floor(baseSP*(1 + intStat*0.01)); // 1% per INT
-
-    // ===============================
-    // REGEN
-    // ===============================
-    let hpRegen = Math.floor(maxHP/200) + Math.floor(vit/5);
-    let spRegen = Math.floor(maxSP/100) + Math.floor(intStat/6) + 1;
-
-    // ===============================
-    // BARS
-    // ===============================
-    let maxPossibleHP = 20000;
-    let maxPossibleSP = 5000;
-
-    let hpPercent = Math.min((maxHP/maxPossibleHP)*100,100);
-    let spPercent = Math.min((maxSP/maxPossibleSP)*100,100);
-
-    document.getElementById("hpBar").style.width = hpPercent+"%";
-    document.getElementById("spBar").style.width = spPercent+"%";
-
-    // ===============================
-    // DISPLAY VALUES
-    // ===============================
+    let maxHP = Math.floor((35 + level*jobInfo.hpFactor)*(1 + vit*0.008));
+    let maxSP = Math.floor((10 + level*jobInfo.spFactor)*(1 + intStat*0.01));
+    
     document.getElementById("hp").innerText = maxHP;
     document.getElementById("sp").innerText = maxSP;
-    document.getElementById("hpRegen").innerText = hpRegen;
-    document.getElementById("spRegen").innerText = spRegen;
-    document.getElementById("weight").innerText = weight;
+    document.getElementById("hpRegen").innerText = Math.floor(maxHP/200) + Math.floor(vit/5);
+    document.getElementById("spRegen").innerText = Math.floor(maxSP/100) + Math.floor(intStat/6) + 1;
+    document.getElementById("weight").innerText = str*30;
+    
+    document.getElementById("hpBar").style.width = Math.min((maxHP/20000)*100,100)+"%";
+    document.getElementById("spBar").style.width = Math.min((maxSP/5000)*100,100)+"%";
 }
