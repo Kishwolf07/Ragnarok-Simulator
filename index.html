@@ -13,7 +13,6 @@
     <div class="main-layout">
         <!-- LEFT PANEL: Character + HP/SP -->
         <div class="left-panel">
-            
             <div class="gender-switch">
                 <label class="switch">
                     <input type="checkbox" id="genderToggle" onchange="updateCharacterImage();">
@@ -29,20 +28,18 @@
 
             <div class="hp-sp-box">
                 <div class="bar-row">
-                    <span>HP</span>
+                    <span>Weight: <span id="weight">2000</span></span>
+                </div>
+                <div class="bar-row">
+                    <span>HP <span id="hpValue">0</span>/20000</span>
                     <div class="custom-bar">
-                        <div id="hpBar" class="fill hp-fill">
-                            <span id="hpText">0%</span>
-                        </div>
+                        <div id="hpBar" class="fill hp-fill"><span id="hpText">0%</span></div>
                     </div>
                 </div>
-
                 <div class="bar-row">
-                    <span>SP</span>
+                    <span>SP <span id="spValue">0</span>/5000</span>
                     <div class="custom-bar">
-                        <div id="spBar" class="fill sp-fill">
-                            <span id="spText">0%</span>
-                        </div>
+                        <div id="spBar" class="fill sp-fill"><span id="spText">0%</span></div>
                     </div>
                 </div>
             </div>

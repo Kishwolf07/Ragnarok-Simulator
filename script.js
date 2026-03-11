@@ -59,25 +59,26 @@ function getTotalCost(statValue){
 // ===============================
 // JOB DATA
 // ===============================
-const jobData={
-    Novice:{hpFactor:5,spFactor:3},
-    Swordsman:{hpFactor:12,spFactor:2},
-    Mage:{hpFactor:3,spFactor:10},
-    Archer:{hpFactor:8,spFactor:4},
-    Thief:{hpFactor:7,spFactor:3},
-    Acolyte:{hpFactor:6,spFactor:8},
-    Merchant:{hpFactor:9,spFactor:3}
+const jobData = {
+    Novice:    { hpFactor: 0,   spFactor: 1 },
+    Swordsman: { hpFactor: 0.7, spFactor: 2 },
+    Mage:      { hpFactor: 0.3, spFactor: 6 },
+    Archer:    { hpFactor: 0.5, spFactor: 2 },
+    Thief:     { hpFactor: 0.5, spFactor: 2 },
+    Acolyte:   { hpFactor: 0.4, spFactor: 5 }, 
+    Merchant:  { hpFactor: 0.4, spFactor: 3 }
 };
 
 const jobWeapons={
     Novice:["Hand","Dagger","One-handed Sword","One-handed Axe","One-handed Mace","Two-handed Mace","Rod & Staff","Two-handed Staff"],
     Swordsman:["Hand","Dagger","One-handed Sword","Two-handed Sword","One-handed Spear","Two-handed Spear","One-handed Axe","Two-handed Axe","One-handed Mace","Two-handed Mace"],
-    Mage:["Hand","Dagger","Rod & Staff","Two-handed Staff"],
+    Magician:["Hand","Dagger","Rod & Staff","Two-handed Staff"],
     Archer:["Hand","Dagger","Bow"],
     Thief:["Hand","Dagger","One-handed Sword","One-handed Axe","Bow"],
     Acolyte:["Hand","One-handed Mace","Two-handed Mace","Rod & Staff","Two-handed Staff"],
     Merchant:["Hand","Dagger","One-handed Sword","One-handed Axe","Two-handed Axe","One-handed Mace","Two-handed Mace"]
 };
+
 
 // ===============================
 // BTBA MATRIX (Base Time Between Attacks)
@@ -85,12 +86,24 @@ const jobWeapons={
 const jobWeaponBTBA = {
     "Novice":   { "Hand": 1.0, "Dagger": 1.3, "One-handed Sword": 1.4,"One-handed Axe": 1.6, "One-handed Mace": 1.4, "Two-handed Mace": 1.4, "Rod & Staff": 1.3, "Two-handed Staff": 1.3},
     "Swordsman":{ "Hand": 0.8, "Dagger": 1.0, "One-handed Sword": 1.1, "Two-handed Sword": 1.2, "One-handed Spear": 1.3, "Two-handed Spear": 1.4, "One-handed Axe": 1.4, "Two-handed Axe": 1.5, "One-handed Mace": 1.3, "Two-handed Mace": 1.4 },
-    "Mage":     { "Hand": 1.0, "Dagger": 1.2, "Rod & Staff": 1.4, "Two-handed Staff": 1.4},
+    "Magician": { "Hand": 1.0, "Dagger": 1.2, "Rod & Staff": 1.4, "Two-handed Staff": 1.4},
     "Archer":   { "Hand": 0.8, "Dagger": 1.2, "Bow": 1.4 },
     "Thief":    { "Hand": 0.8, "Dagger": 1.0, "One-handed Sword": 1.3, "Bow": 1.6},
     "Acolyte":  { "Hand": 0.8, "One-handed Mace": 1.2, "Two-handed Mace": 1.2, "Rod & Staff": 1.2, "Two-handed Staff": 1.2},
     "Merchant": { "Hand": 0.8, "Dagger": 1.2, "One-handed Sword": 1.4, "One-handed Axe": 1.4, "Two-handed Axe": 1.5, "One-handed Mace": 1.4, "Two-handed Mace": 1.4}
 };
+
+//JOB WEIGHT
+const jobWeightModifier = {
+    "Novice": 0,
+    "Swordsman": 800,
+    "Mage": 400,
+    "Archer": 600,
+    "Thief": 400,
+    "Acolyte": 400,
+    "Merchant": 800
+};
+
 
 function calculateASPD(job, weapon, agi, dex) {
     const btba = (jobWeaponBTBA[job] && jobWeaponBTBA[job][weapon]) ? jobWeaponBTBA[job][weapon] : 1.0;
@@ -124,27 +137,57 @@ function updateWeaponOptions(){
 // ===============================
 // MAIN STAT CALCULATION
 // ===============================
-function updateStats(){
+function updateStats() {
     let level = parseInt(document.getElementById("baseLevel").value) || 1;
     let job = document.getElementById("job").value;
     let weapon = document.getElementById("weapon").value;
-    let str=parseInt(document.getElementById("str").value)||1;
-    let agi=parseInt(document.getElementById("agi").value)||1;
-    let vit=parseInt(document.getElementById("vit").value)||1;
-    let intStat=parseInt(document.getElementById("int").value)||1;
-    let dex=parseInt(document.getElementById("dex").value)||1;
-    let luk=parseInt(document.getElementById("luk").value)||1;
+    let str = parseInt(document.getElementById("str").value) || 1;
+    let agi = parseInt(document.getElementById("agi").value) || 1;
+    let vit = parseInt(document.getElementById("vit").value) || 1;
+    let intStat = parseInt(document.getElementById("int").value) || 1;
+    let dex = parseInt(document.getElementById("dex").value) || 1;
+    let luk = parseInt(document.getElementById("luk").value) || 1;
 
-    document.getElementById("strReq").innerText=getStatCost(str);
-    document.getElementById("agiReq").innerText=getStatCost(agi);
-    document.getElementById("vitReq").innerText=getStatCost(vit);
-    document.getElementById("intReq").innerText=getStatCost(intStat);
-    document.getElementById("dexReq").innerText=getStatCost(dex);
-    document.getElementById("lukReq").innerText=getStatCost(luk);
+    // --- WEIGHT ---
+    let wgtJob = jobWeightModifier[job] || 0;
+    document.getElementById("weight").innerText = 2000 + (30 * str) + wgtJob;
 
-    let totalPoints=getTotalStatPoints(level);
-    let spentPoints=getTotalCost(str)+getTotalCost(agi)+getTotalCost(vit)+getTotalCost(intStat)+getTotalCost(dex)+getTotalCost(luk);
-    document.getElementById("statusPoints").innerText=Math.max(totalPoints-spentPoints,0);
+    // --- HP CALCULATION---
+    let jobInfo = jobData[job] || jobData["Novice"];
+    let baseHP = 35 + (level * 5); 
+    for (let i = 2; i <= level; i++) {
+        baseHP += Math.round(jobInfo.hpFactor * i);
+    }
+    let maxHP = Math.floor(baseHP * (1 + vit * 0.01));
+
+    // --- SP CALCULATION ---
+    let baseSP = 10 + (level * jobInfo.spFactor);
+    let maxSP = Math.floor(baseSP * (1 + intStat * 0.01));
+
+    // --- DOM UPDATES ---
+    // HP Display
+    document.getElementById("hpValue").innerText = maxHP;
+    let hpPercent = Math.min((maxHP / 20000) * 100, 100).toFixed(0);
+    document.getElementById("hpText").innerText = hpPercent + "%";
+    document.getElementById("hpBar").style.width = hpPercent + "%";
+
+    // SP Display 
+    document.getElementById("spValue").innerText = maxSP; 
+    let spPercent = Math.min((maxSP / 5000) * 100, 100).toFixed(0);
+    document.getElementById("spText").innerText = spPercent + "%";
+    document.getElementById("spBar").style.width = spPercent + "%";
+
+    // --- OTHER STATS ---
+    document.getElementById("strReq").innerText = getStatCost(str);
+    document.getElementById("agiReq").innerText = getStatCost(agi);
+    document.getElementById("vitReq").innerText = getStatCost(vit);
+    document.getElementById("intReq").innerText = getStatCost(intStat);
+    document.getElementById("dexReq").innerText = getStatCost(dex);
+    document.getElementById("lukReq").innerText = getStatCost(luk);
+
+    let totalPoints = getTotalStatPoints(level);
+    let spentPoints = getTotalCost(str) + getTotalCost(agi) + getTotalCost(vit) + getTotalCost(intStat) + getTotalCost(dex) + getTotalCost(luk);
+    document.getElementById("statusPoints").innerText = Math.max(totalPoints - spentPoints, 0);
 
     let atkBase = str + Math.floor(Math.pow(Math.floor(str/10),2));
     let atkBonus = ["Archer","Thief"].includes(job) ? Math.floor(dex/5) : Math.floor(dex/5) + Math.floor(luk/5);
@@ -159,19 +202,8 @@ function updateStats(){
     document.getElementById("def").innerText = "0 + " + Math.floor(vit*0.8);
     document.getElementById("mdef").innerText = "0 + " + intStat;
     document.getElementById("flee").innerText = (level + agi) + " + " + (1 + Math.floor(luk/5));
-
     document.getElementById("aspd").innerText = calculateASPD(job, weapon, agi, dex);
-
-    let jobInfo = jobData[job] || jobData["Novice"];
-    let maxHP = Math.floor((35 + level*jobInfo.hpFactor)*(1 + vit*0.008));
-    let maxSP = Math.floor((10 + level*jobInfo.spFactor)*(1 + intStat*0.01));
     
-    document.getElementById("hp").innerText = maxHP;
-    document.getElementById("sp").innerText = maxSP;
     document.getElementById("hpRegen").innerText = Math.floor(maxHP/200) + Math.floor(vit/5);
     document.getElementById("spRegen").innerText = Math.floor(maxSP/100) + Math.floor(intStat/6) + 1;
-    document.getElementById("weight").innerText = str*30;
-    
-    document.getElementById("hpBar").style.width = Math.min((maxHP/20000)*100,100)+"%";
-    document.getElementById("spBar").style.width = Math.min((maxSP/5000)*100,100)+"%";
 }
