@@ -1,5 +1,5 @@
 // ===============================
-// CHARACTER IMAGE (FIXED - G FORMAT + ICON + FADE)
+// CHARACTER IMAGE
 // ===============================
 function updateCharacterImage() {
     const job = document.getElementById("job").value;
@@ -13,9 +13,6 @@ function updateCharacterImage() {
         genderSymbol.textContent = isFemale ? "♀" : "♂";
         genderSymbol.classList.remove("male-icon", "female-icon");
         genderSymbol.classList.add(isFemale ? "female-icon" : "male-icon");
-        genderSymbol.classList.remove("bounce");
-        void genderSymbol.offsetWidth;
-        genderSymbol.classList.add("bounce");
     }
 
     const jobFile = job.toLowerCase();
@@ -35,175 +32,179 @@ function updateCharacterImage() {
 // STAT POINT SYSTEM
 // ===============================
 function getPointsForLevel(level){
-    if(level<=4) return 3;
-    if(level>=95) return 22;
-    return Math.floor((level-1)/5)+3;
+    if(level <= 4) return 3;
+    if(level >= 95) return 22;
+    return Math.floor((level - 1) / 5) + 3;
 }
 
 function getTotalStatPoints(level){
-    let total=48;
-    for(let i=2;i<=level;i++) total+=getPointsForLevel(i);
+    let total = 48;
+    for(let i = 2; i <= level; i++) total += getPointsForLevel(i);
     return total;
 }
 
 function getStatCost(value){
-    return Math.min(Math.floor((value-1)/10)+2,11);
+    return Math.min(Math.floor((value - 1) / 10) + 2, 11);
 }
 
 function getTotalCost(statValue){
-    let total=0;
-    for(let i=1;i<statValue;i++) total+=getStatCost(i);
+    let total = 0;
+    for(let i = 1; i < statValue; i++) total += getStatCost(i);
     return total;
 }
 
 // ===============================
-// JOB DATA
+// DATA TABLES
 // ===============================
 const jobData = {
-    Novice:    { hpFactor: 0,   spFactor: 1 },
-    Swordsman: { hpFactor: 0.7, spFactor: 2 },
-    Mage:      { hpFactor: 0.3, spFactor: 6 },
-    Archer:    { hpFactor: 0.5, spFactor: 2 },
-    Thief:     { hpFactor: 0.5, spFactor: 2 },
-    Acolyte:   { hpFactor: 0.4, spFactor: 5 }, 
-    Merchant:  { hpFactor: 0.4, spFactor: 3 }
+    Novice:    { hpFactor: 0,   spFactor: 1, maxJob: 9 }, 
+    Swordsman: { hpFactor: 0.7, spFactor: 2, maxJob: 50 },
+    Mage:      { hpFactor: 0.3, spFactor: 6, maxJob: 50 },
+    Archer:    { hpFactor: 0.5, spFactor: 2, maxJob: 50 },
+    Thief:     { hpFactor: 0.5, spFactor: 2, maxJob: 50 },
+    Acolyte:   { hpFactor: 0.4, spFactor: 5, maxJob: 50 }, 
+    Merchant:  { hpFactor: 0.4, spFactor: 3, maxJob: 50 }
 };
 
-const jobWeapons={
-    Novice:["Hand","Dagger","One-handed Sword","One-handed Axe","One-handed Mace","Two-handed Mace","Rod & Staff","Two-handed Staff"],
-    Swordsman:["Hand","Dagger","One-handed Sword","Two-handed Sword","One-handed Spear","Two-handed Spear","One-handed Axe","Two-handed Axe","One-handed Mace","Two-handed Mace"],
-    Magician:["Hand","Dagger","Rod & Staff","Two-handed Staff"],
-    Archer:["Hand","Dagger","Bow"],
-    Thief:["Hand","Dagger","One-handed Sword","One-handed Axe","Bow"],
-    Acolyte:["Hand","One-handed Mace","Two-handed Mace","Rod & Staff","Two-handed Staff"],
-    Merchant:["Hand","Dagger","One-handed Sword","One-handed Axe","Two-handed Axe","One-handed Mace","Two-handed Mace"]
+const jobWeapons = {
+    Novice: ["Hand","Dagger","One-handed Sword","One-handed Axe","One-handed Mace","Two-handed Mace","Rod & Staff","Two-handed Staff"],
+    Swordsman: ["Hand","Dagger","One-handed Sword","Two-handed Sword","One-handed Spear","Two-handed Spear","One-handed Axe","Two-handed Axe","One-handed Mace","Two-handed Mace"],
+    Mage: ["Hand","Dagger","Rod & Staff","Two-handed Staff"],
+    Archer: ["Hand","Dagger","Bow"],
+    Thief: ["Hand","Dagger","One-handed Sword","One-handed Axe","Bow"],
+    Acolyte: ["Hand","One-handed Mace","Two-handed Mace","Rod & Staff","Two-handed Staff"],
+    Merchant: ["Hand","Dagger","One-handed Sword","One-handed Axe","Two-handed Axe","One-handed Mace","Two-handed Mace"]
 };
 
-
-// ===============================
-// BTBA MATRIX (Base Time Between Attacks)
-// ===============================
 const jobWeaponBTBA = {
-    "Novice":   { "Hand": 1.0, "Dagger": 1.3, "One-handed Sword": 1.4,"One-handed Axe": 1.6, "One-handed Mace": 1.4, "Two-handed Mace": 1.4, "Rod & Staff": 1.3, "Two-handed Staff": 1.3},
+    "Novice":   { "Hand": 1.0, "Dagger": 1.3, "One-handed Sword": 1.4, "One-handed Axe": 1.6, "One-handed Mace": 1.4, "Two-handed Mace": 1.4, "Rod & Staff": 1.3, "Two-handed Staff": 1.3},
     "Swordsman":{ "Hand": 0.8, "Dagger": 1.0, "One-handed Sword": 1.1, "Two-handed Sword": 1.2, "One-handed Spear": 1.3, "Two-handed Spear": 1.4, "One-handed Axe": 1.4, "Two-handed Axe": 1.5, "One-handed Mace": 1.3, "Two-handed Mace": 1.4 },
-    "Magician": { "Hand": 1.0, "Dagger": 1.2, "Rod & Staff": 1.4, "Two-handed Staff": 1.4},
+    "Mage":     { "Hand": 1.0, "Dagger": 1.2, "Rod & Staff": 1.4, "Two-handed Staff": 1.4},
     "Archer":   { "Hand": 0.8, "Dagger": 1.2, "Bow": 1.4 },
     "Thief":    { "Hand": 0.8, "Dagger": 1.0, "One-handed Sword": 1.3, "Bow": 1.6},
     "Acolyte":  { "Hand": 0.8, "One-handed Mace": 1.2, "Two-handed Mace": 1.2, "Rod & Staff": 1.2, "Two-handed Staff": 1.2},
     "Merchant": { "Hand": 0.8, "Dagger": 1.2, "One-handed Sword": 1.4, "One-handed Axe": 1.4, "Two-handed Axe": 1.5, "One-handed Mace": 1.4, "Two-handed Mace": 1.4}
 };
 
-//JOB WEIGHT
-const jobWeightModifier = {
-    "Novice": 0,
-    "Swordsman": 800,
-    "Mage": 400,
-    "Archer": 600,
-    "Thief": 400,
-    "Acolyte": 400,
-    "Merchant": 800
-};
+const jobWeightModifier = { "Novice": 0, "Swordsman": 800, "Mage": 400, "Archer": 600, "Thief": 400, "Acolyte": 400, "Merchant": 800 };
 
-
+// ===============================
+// CALCULATIONS
+// ===============================
 function calculateASPD(job, weapon, agi, dex) {
     const btba = (jobWeaponBTBA[job] && jobWeaponBTBA[job][weapon]) ? jobWeaponBTBA[job][weapon] : 1.0;
-    let WD = 50 * btba; // Official Base Weapon Delay
-
-    let delayReductionAGI = Math.round(WD * agi / 25);
-    let delayReductionDEX = Math.round(WD * dex / 100);
-
-    let adjustedDelay = WD - Math.floor((delayReductionAGI + delayReductionDEX) / 10);
-    let aspd = 200 - adjustedDelay;
-
+    let WD = 50 * btba;
+    let drAgi = Math.round(WD * agi / 25);
+    let drDex = Math.round(WD * dex / 100);
+    let aspd = 200 - (WD - Math.floor((drAgi + drDex) / 10));
     return Math.min(Math.max(aspd, 0), 190);
 }
 
-// ===============================
-// UPDATE WEAPON OPTIONS
-// ===============================
 function updateWeaponOptions(){
-    const job=document.getElementById("job").value;
-    const weaponSelect=document.getElementById("weapon");
-    weaponSelect.innerHTML="";
-    const allowed=jobWeapons[job]||["Hand"];
-    allowed.forEach(w=>{
-        let option=document.createElement("option");
-        option.value=w;
-        option.textContent=w;
+    const job = document.getElementById("job").value;
+    const weaponSelect = document.getElementById("weapon");
+    weaponSelect.innerHTML = "";
+    (jobWeapons[job] || ["Hand"]).forEach(w => {
+        let option = document.createElement("option");
+        option.value = w; option.textContent = w;
         weaponSelect.appendChild(option);
     }); 
 }
 
 // ===============================
-// MAIN STAT CALCULATION
+// MAIN UPDATE FUNCTION
 // ===============================
-function updateStats() {
+function updateStats(changedStatId) {
     let level = parseInt(document.getElementById("baseLevel").value) || 1;
     let job = document.getElementById("job").value;
     let weapon = document.getElementById("weapon").value;
-    let str = parseInt(document.getElementById("str").value) || 1;
-    let agi = parseInt(document.getElementById("agi").value) || 1;
-    let vit = parseInt(document.getElementById("vit").value) || 1;
-    let intStat = parseInt(document.getElementById("int").value) || 1;
-    let dex = parseInt(document.getElementById("dex").value) || 1;
-    let luk = parseInt(document.getElementById("luk").value) || 1;
-
-    // --- WEIGHT ---
-    let wgtJob = jobWeightModifier[job] || 0;
-    document.getElementById("weight").innerText = 2000 + (30 * str) + wgtJob;
-
-    // --- HP CALCULATION---
     let jobInfo = jobData[job] || jobData["Novice"];
-    let baseHP = 35 + (level * 5); 
-    for (let i = 2; i <= level; i++) {
-        baseHP += Math.round(jobInfo.hpFactor * i);
-    }
-    let maxHP = Math.floor(baseHP * (1 + vit * 0.01));
+    let upgradeBonus = 0; 
 
-    // --- SP CALCULATION ---
-    let baseSP = 10 + (level * jobInfo.spFactor);
-    let maxSP = Math.floor(baseSP * (1 + intStat * 0.01));
+    const jobLevelInput = document.getElementById("jobLevel");
+    if (parseInt(jobLevelInput.value) > jobInfo.maxJob) jobLevelInput.value = jobInfo.maxJob;
 
-    // --- DOM UPDATES ---
-    // HP Display
-    document.getElementById("hpValue").innerText = maxHP;
-    let hpPercent = Math.min((maxHP / 20000) * 100, 100).toFixed(0);
-    document.getElementById("hpText").innerText = hpPercent + "%";
-    document.getElementById("hpBar").style.width = hpPercent + "%";
-
-    // SP Display 
-    document.getElementById("spValue").innerText = maxSP; 
-    let spPercent = Math.min((maxSP / 5000) * 100, 100).toFixed(0);
-    document.getElementById("spText").innerText = spPercent + "%";
-    document.getElementById("spBar").style.width = spPercent + "%";
-
-    // --- OTHER STATS ---
-    document.getElementById("strReq").innerText = getStatCost(str);
-    document.getElementById("agiReq").innerText = getStatCost(agi);
-    document.getElementById("vitReq").innerText = getStatCost(vit);
-    document.getElementById("intReq").innerText = getStatCost(intStat);
-    document.getElementById("dexReq").innerText = getStatCost(dex);
-    document.getElementById("lukReq").innerText = getStatCost(luk);
+    let stats = {
+        str: parseInt(document.getElementById("str").value) || 1,
+        agi: parseInt(document.getElementById("agi").value) || 1,
+        vit: parseInt(document.getElementById("vit").value) || 1,
+        int: parseInt(document.getElementById("int").value) || 1,
+        dex: parseInt(document.getElementById("dex").value) || 1,
+        luk: parseInt(document.getElementById("luk").value) || 1
+    };
 
     let totalPoints = getTotalStatPoints(level);
-    let spentPoints = getTotalCost(str) + getTotalCost(agi) + getTotalCost(vit) + getTotalCost(intStat) + getTotalCost(dex) + getTotalCost(luk);
+    let spentPoints = getTotalCost(stats.str) + getTotalCost(stats.agi) + getTotalCost(stats.vit) + 
+                      getTotalCost(stats.int) + getTotalCost(stats.dex) + getTotalCost(stats.luk);
+
+    if (changedStatId && spentPoints > totalPoints) {
+        stats[changedStatId] -= 1;
+        document.getElementById(changedStatId).value = stats[changedStatId];
+        spentPoints = getTotalCost(stats.str) + getTotalCost(stats.agi) + getTotalCost(stats.vit) + 
+                      getTotalCost(stats.int) + getTotalCost(stats.dex) + getTotalCost(stats.luk);
+    }
+
+    let weight = 2000 + (30 * stats.str) + (jobWeightModifier[job] || 0);
+    let baseHP = 35 + (level * 5);
+    for (let i = 2; i <= level; i++) baseHP += Math.round(jobInfo.hpFactor * i);
+    let maxHP = Math.floor(baseHP * (1 + stats.vit * 0.01));
+    let maxSP = Math.floor((10 + (level * jobInfo.spFactor)) * (1 + stats.int * 0.01));
+
+    document.getElementById("weight").innerText = weight;
+    document.getElementById("hpValue").innerText = maxHP;
+    document.getElementById("spValue").innerText = maxSP;
     document.getElementById("statusPoints").innerText = Math.max(totalPoints - spentPoints, 0);
 
-    let atkBase = str + Math.floor(Math.pow(Math.floor(str/10),2));
-    let atkBonus = ["Archer","Thief"].includes(job) ? Math.floor(dex/5) : Math.floor(dex/5) + Math.floor(luk/5);
-    document.getElementById("atk").innerText = atkBase + " + " + atkBonus;
+    // --- BATTLE STATS ---
 
-    let matkMin = intStat + Math.floor(Math.pow(Math.floor(intStat/7),2));
-    let matkMax = intStat + Math.floor(Math.pow(Math.floor(intStat/5),2));
-    document.getElementById("matk").innerText = matkMin + "~" + matkMax;
-
-    document.getElementById("hit").innerText = level + dex;
-    document.getElementById("critical").innerText = Math.floor(luk*0.3)+1;
-    document.getElementById("def").innerText = "0 + " + Math.floor(vit*0.8);
-    document.getElementById("mdef").innerText = "0 + " + intStat;
-    document.getElementById("flee").innerText = (level + agi) + " + " + (1 + Math.floor(luk/5));
-    document.getElementById("aspd").innerText = calculateASPD(job, weapon, agi, dex);
+    // ATK
+    let baseAtk = (weapon === "Bow") 
+        ? (stats.dex + Math.pow(Math.floor(stats.dex / 10), 2) + Math.floor(stats.str / 5) + Math.floor(stats.luk / 5))
+        : (stats.str + Math.pow(Math.floor(stats.str / 10), 2) + Math.floor(stats.dex / 5) + Math.floor(stats.luk / 5));
+    document.getElementById("atk").innerText = baseAtk + " + " + upgradeBonus;
     
-    document.getElementById("hpRegen").innerText = Math.floor(maxHP/200) + Math.floor(vit/5);
-    document.getElementById("spRegen").innerText = Math.floor(maxSP/100) + Math.floor(intStat/6) + 1;
+    // MATK
+    let matkMin = stats.int + Math.pow(Math.floor(stats.int / 7), 2);
+    let matkMax = stats.int + Math.pow(Math.floor(stats.int / 5), 2);
+    if(document.getElementById("matk")) document.getElementById("matk").innerText = matkMin + " ~ " + matkMax;
+    
+    //DEF
+    document.getElementById("def").innerText = "0 + " + stats.vit;
+
+    // MDEF
+    if(document.getElementById("mdef")) {
+        document.getElementById("mdef").innerText = "0 + " + stats.int;
+    }
+    
+    // HIT
+    document.getElementById("hit").innerText = level + stats.dex;
+    
+    // FLEE
+    let fleeBase = level + stats.agi;
+    let luckyDodge = Math.floor(stats.luk / 10) + 1;
+    document.getElementById("flee").innerText = fleeBase + " + " + luckyDodge;
+    
+    // CRIT
+    if(document.getElementById("critical")) document.getElementById("critical").innerText = Math.floor(stats.luk * 0.3) + 1;
+    
+    // ASPD
+    document.getElementById("aspd").innerText = calculateASPD(job, weapon, stats.agi, stats.dex);
+}
+
+// ===============================
+// RESET SYSTEM
+// ===============================
+function resetCharacter() {
+    document.getElementById("baseLevel").value = 1;
+    document.getElementById("jobLevel").value = 1;
+    document.getElementById("job").value = "Novice";
+    
+    const stats = ["str", "agi", "vit", "int", "dex", "luk"];
+    stats.forEach(s => {
+        document.getElementById(s).value = 1;
+    });
+
+    updateWeaponOptions();
+    updateCharacterImage();
+    updateStats();
 }

@@ -10,6 +10,12 @@ body {
     min-height:100vh;
 }
 
+.reset-button{
+    width: 100%;
+    margin-top: 10px; 
+    cursor: pointer;
+}
+
 .character-box img.character-gif {
     width: 100%;
     height: 100%;

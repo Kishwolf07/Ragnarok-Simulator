@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Ragnarok Stat Simulator</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Ragnarok Stat Simulator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -11,7 +11,6 @@
     <h2>Ragnarok Stat Simulator</h2>
 
     <div class="main-layout">
-        <!-- LEFT PANEL: Character + HP/SP -->
         <div class="left-panel">
             <div class="gender-switch">
                 <label class="switch">
@@ -37,7 +36,7 @@
                     </div>
                 </div>
                 <div class="bar-row">
-                    <span>SP <span id="spValue">0</span>/5000</span>
+                 <span>SP <span id="spValue">0</span>/5000</span>
                     <div class="custom-bar">
                         <div id="spBar" class="fill sp-fill"><span id="spText">0%</span></div>
                     </div>
@@ -45,20 +44,17 @@
             </div>
         </div>
 
-        <!-- RIGHT PANEL: Setup + Tables -->
         <div class="right-panel">
-
-            <!-- Character Setup -->
             <div class="character-setup">
                 <h3>Character Setup</h3>
                 <div class="setup-row">
                     <label>Base Level:</label>
-                    <input type="number" id="baseLevel" value="1" min="1" max="99" onchange="updateStats();">
+                    <input type="number" id="baseLevel" value="1" min="1" max="99" oninput="updateStats();">
                 </div>
 
                 <div class="setup-row">
                     <label>Job Level:</label>
-                    <input type="number" id="jobLevel" value="1" min="1" max="50" onchange="updateStats();">
+                    <input type="number" id="jobLevel" value="1" min="1" max="50" oninput="updateStats();">
                 </div>
 
                 <div class="setup-row">
@@ -80,10 +76,7 @@
                 </div>
             </div>
 
-            <!-- Two side-by-side boxes -->
             <div class="tables-container">
-
-                <!-- Stats Table Box -->
                 <div class="table-box">
                     <h4>Stats</h4>
                     <table class="stats-table">
@@ -98,37 +91,37 @@
                         <tbody>
                             <tr>
                                 <td>STR</td>
-                                <td><input type="number" id="str" value="1" min="1" onchange="updateStats();"></td>
+                                <td><input type="number" id="str" value="1" min="1" oninput="updateStats('str');"></td>
                                 <td id="strReq">2</td>
                                 <td id="strBonus">0</td>
                             </tr>
                             <tr>
                                 <td>AGI</td>
-                                <td><input type="number" id="agi" value="1" min="1" onchange="updateStats();"></td>
+                                <td><input type="number" id="agi" value="1" min="1" oninput="updateStats('agi');"></td>
                                 <td id="agiReq">2</td>
                                 <td id="agiBonus">0</td>
                             </tr>
                             <tr>
                                 <td>VIT</td>
-                                <td><input type="number" id="vit" value="1" min="1" onchange="updateStats();"></td>
+                                <td><input type="number" id="vit" value="1" min="1" oninput="updateStats('vit');"></td>
                                 <td id="vitReq">2</td>
                                 <td id="vitBonus">0</td>
                             </tr>
                             <tr>
                                 <td>INT</td>
-                                <td><input type="number" id="int" value="1" min="1" onchange="updateStats();"></td>
+                                <td><input type="number" id="int" value="1" min="1" oninput="updateStats('int');"></td>
                                 <td id="intReq">2</td>
                                 <td id="intBonus">0</td>
                             </tr>
                             <tr>
                                 <td>DEX</td>
-                                <td><input type="number" id="dex" value="1" min="1" onchange="updateStats();"></td>
+                                <td><input type="number" id="dex" value="1" min="1" oninput="updateStats('dex');"></td>
                                 <td id="dexReq">2</td>
                                 <td id="dexBonus">0</td>
                             </tr>
                             <tr>
                                 <td>LUK</td>
-                                <td><input type="number" id="luk" value="1" min="1" onchange="updateStats();"></td>
+                                <td><input type="number" id="luk" value="1" min="1" oninput="updateStats('luk');"></td>
                                 <td id="lukReq">2</td>
                                 <td id="lukBonus">0</td>
                             </tr>
@@ -136,70 +129,55 @@
                     </table>
                 </div>
 
-                <!-- Status Info Box -->
                 <div class="table-box">
                     <h4>Status Information</h4>
                     <div class="status-columns">
-                        <!-- Left Column -->
                         <table class="status-table">
                             <tbody>
                                 <tr>
-                                    <th><img src="icons/atk.png" class="stat-icon"> ATK</th>
+                                    <th>ATK</th>
                                     <td id="atk">1 + 0</td>
                                 </tr>
                                 <tr>
-                                    <th><img src="icons/matk.png" class="stat-icon"> MATK</th>
+                                    <th>MATK</th>
                                     <td id="matk">1~1</td>
                                 </tr>
                                 <tr>
-                                    <th><img src="icons/hit.png" class="stat-icon"> HIT</th>
+                                    <th>HIT</th>
                                     <td id="hit">2</td>
                                 </tr>
                                 <tr>
-                                    <th><img src="icons/crit.png" class="stat-icon"> CRIT</th>
+                                    <th>CRIT</th>
                                     <td id="critical">1</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <!-- Right Column -->
                         <table class="status-table">
                             <tbody>
                                 <tr>
-                                    <th><img src="icons/def.png" class="stat-icon"> DEF</th>
+                                    <th>DEF</th>
                                     <td id="def">0 + 1</td>
                                 </tr>
                                 <tr>
-                                    <th><img src="icons/mdef.png" class="stat-icon"> MDEF</th>
+                                    <th>MDEF</th>
                                     <td id="mdef">0 + 1</td>
                                 </tr>
                                 <tr>
-                                    <th><img src="icons/flee.png" class="stat-icon"> FLEE</th>
+                                    <th>FLEE</th>
                                     <td id="flee">0 + 1</td>
                                 </tr>
                                 <tr>
-                                    <th><img src="icons/aspd.png" class="stat-icon"> ASPD</th>
+                                    <th>ASPD</th>
                                     <td id="aspd">0</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-
-                    <br/>
-
-                    <!-- Remaining Points inside Status Box -->
                     <div class="status-points">
-                        Remaining Points: <span id="statusPoints">0</span>
+                        Remaining Points: <span id="statusPoints">48</span>                       
                     </div>
-                    <!-- Floating cartoon leaves/flowers -->
-                    <div class="floating-elements">
-                        <div class="leaf">🍃</div>
-                        <div class="leaf">🍀</div>
-                        <div class="leaf">🌸</div>
-                        <div class="leaf">🍁</div>
-                        <div class="leaf">🌼</div>
-                    </div>
+                    <button class="reset-button" onclick="resetCharacter();">Reset</button>
                 </div>
-
             </div>
         </div>
     </div>
