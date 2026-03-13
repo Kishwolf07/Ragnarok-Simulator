@@ -52,12 +52,12 @@ function getTotalStatPoints(level) {
 
 // JOB BONUSES DATA
 const jobBonuses = {
-    "Swordsman": { 1: [0,0,0,0,0,0], 2: [1,0,0,0,0,0], 6: [1,0,1,0,0,0], 10: [1,0,1,0,1,0], 14: [2,0,1,0,1,0], 18: [2,0,2,0,1,0], 22: [2,0,2,0,2,0], 26: [2,0,2,0,2,1], 30: [3,0,2,0,2,1], 33: [3,0,3,0,2,1], 36: [3,0,3,0,3,1], 40: [4,0,3,0,3,1], 42: [4,0,4,0,3,1], 44: [4,0,4,0,3,2], 46: [4,1,4,0,3,2], 47: [5,1,4,0,3,2], 49: [6,1,4,0,3,2], 50: [7,2,4,0,3,2] },
-    "Mage": { 1: [0,0,0,0,0,0], 2: [0,0,0,1,0,0], 6: [0,0,0,1,1,0], 10: [0,0,0,1,2,0], 14: [0,0,0,2,2,0], 18: [0,1,0,2,2,0], 22: [0,1,0,3,2,0], 26: [0,2,0,3,2,0], 30: [0,2,0,3,2,1], 33: [0,2,0,4,2,1], 36: [0,2,0,4,3,1], 38: [0,2,0,5,3,1], 40: [0,3,0,5,3,1], 42: [0,3,0,5,3,2], 44: [0,3,0,6,3,2], 46: [0,3,0,7,3,2], 47: [0,4,0,7,3,2], 49: [0,4,0,7,3,3], 50: [0,4,0,8,3,3] },
-    "Archer": { 1: [0,0,0,0,0,0], 2: [0,0,0,0,1,0], 6: [1,0,0,0,1,0], 10: [1,0,0,1,1,0], 14: [1,0,0,1,2,0], 18: [1,0,0,1,3,0], 22: [1,0,0,1,3,1], 26: [1,1,0,1,3,1], 30: [1,1,0,1,4,1], 33: [1,2,0,1,4,1], 36: [1,2,0,1,5,1], 38: [2,2,0,1,5,1], 40: [3,2,0,1,5,1], 42: [3,2,0,1,6,1], 44: [3,2,0,1,6,2], 46: [3,2,1,1,6,2], 47: [3,2,1,2,6,2], 49: [3,3,1,2,6,2], 50: [3,3,1,2,7,2] },
-    "Merchant": { 1: [0,0,0,0,0,0], 2: [0,0,1,0,0,0], 6: [0,0,1,0,1,0], 10: [1,0,1,0,1,0], 14: [1,0,1,0,2,0], 18: [1,0,2,0,2,0], 22: [2,0,2,0,2,0], 26: [2,0,2,1,2,0], 30: [2,0,3,1,2,0], 33: [2,1,3,1,2,0], 36: [2,1,3,1,2,1], 38: [2,1,3,1,3,1], 40: [3,1,3,1,3,1], 42: [3,1,3,1,4,1], 44: [4,1,3,1,4,1], 46: [4,1,3,1,4,2], 47: [4,1,4,1,4,2], 49: [5,1,4,1,4,2], 50: [5,1,4,1,5,2] },
-    "Thief": { 1: [0,0,0,0,0,0], 2: [0,1,0,0,0,0], 6: [1,1,0,0,0,0], 10: [1,1,0,0,1,0], 14: [1,1,1,0,1,0], 18: [1,1,1,1,1,0], 22: [1,1,1,1,2,0], 26: [1,1,1,1,2,1], 30: [2,1,1,1,2,1], 33: [2,2,1,1,2,1], 36: [2,3,1,1,2,1], 38: [3,3,1,1,2,1], 40: [3,3,1,1,2,2], 42: [3,3,1,1,3,2], 44: [3,3,2,1,3,2], 46: [3,3,2,1,3,3], 47: [4,3,2,1,3,3], 49: [4,3,2,1,4,3], 50: [4,4,2,1,4,3] },
-    "Acolyte": { 1: [0,0,0,0,0,0], 2: [0,0,0,0,0,1], 6: [0,0,1,0,0,1], 10: [0,0,1,1,0,1], 14: [0,0,1,1,1,1], 18: [0,0,1,1,1,2], 22: [0,1,1,1,1,2], 26: [1,1,1,1,1,2], 30: [1,1,2,1,1,2], 36: [1,1,2,2,2,2], 38: [1,1,2,2,2,3], 40: [1,2,2,2,2,3], 42: [2,2,2,2,2,3], 44: [2,2,3,2,2,3], 46: [2,2,3,3,3,3], 49: [3,2,3,3,3,3], 50: [3,2,3,3,3,4] }
+    "Swordsman": { 1: [0, 0, 0, 0, 0, 0], 2: [1, 0, 0, 0, 0, 0], 6: [1, 0, 1, 0, 0, 0], 10: [1, 0, 1, 0, 1, 0], 14: [2, 0, 1, 0, 1, 0], 18: [2, 0, 2, 0, 1, 0], 22: [2, 0, 2, 0, 2, 0], 26: [2, 0, 2, 0, 2, 1], 30: [3, 0, 2, 0, 2, 1], 33: [3, 0, 3, 0, 2, 1], 36: [3, 0, 3, 0, 3, 1], 40: [4, 0, 3, 0, 3, 1], 42: [4, 0, 4, 0, 3, 1], 44: [4, 0, 4, 0, 3, 2], 46: [4, 1, 4, 0, 3, 2], 47: [5, 1, 4, 0, 3, 2], 49: [6, 1, 4, 0, 3, 2], 50: [7, 2, 4, 0, 3, 2] },
+    "Mage": { 1: [0, 0, 0, 0, 0, 0], 2: [0, 0, 0, 1, 0, 0], 6: [0, 0, 0, 1, 1, 0], 10: [0, 0, 0, 1, 2, 0], 14: [0, 0, 0, 2, 2, 0], 18: [0, 1, 0, 2, 2, 0], 22: [0, 1, 0, 3, 2, 0], 26: [0, 2, 0, 3, 2, 0], 30: [0, 2, 0, 3, 2, 1], 33: [0, 2, 0, 4, 2, 1], 36: [0, 2, 0, 4, 3, 1], 38: [0, 2, 0, 5, 3, 1], 40: [0, 3, 0, 5, 3, 1], 42: [0, 3, 0, 5, 3, 2], 44: [0, 3, 0, 6, 3, 2], 46: [0, 3, 0, 7, 3, 2], 47: [0, 4, 0, 7, 3, 2], 49: [0, 4, 0, 7, 3, 3], 50: [0, 4, 0, 8, 3, 3] },
+    "Archer": { 1: [0, 0, 0, 0, 0, 0], 2: [0, 0, 0, 0, 1, 0], 6: [1, 0, 0, 0, 1, 0], 10: [1, 0, 0, 1, 1, 0], 14: [1, 0, 0, 1, 2, 0], 18: [1, 0, 0, 1, 3, 0], 22: [1, 0, 0, 1, 3, 1], 26: [1, 1, 0, 1, 3, 1], 30: [1, 1, 0, 1, 4, 1], 33: [1, 2, 0, 1, 4, 1], 36: [1, 2, 0, 1, 5, 1], 38: [2, 2, 0, 1, 5, 1], 40: [3, 2, 0, 1, 5, 1], 42: [3, 2, 0, 1, 6, 1], 44: [3, 2, 0, 1, 6, 2], 46: [3, 2, 1, 1, 6, 2], 47: [3, 2, 1, 2, 6, 2], 49: [3, 3, 1, 2, 6, 2], 50: [3, 3, 1, 2, 7, 2] },
+    "Merchant": { 1: [0, 0, 0, 0, 0, 0], 2: [0, 0, 1, 0, 0, 0], 6: [0, 0, 1, 0, 1, 0], 10: [1, 0, 1, 0, 1, 0], 14: [1, 0, 1, 0, 2, 0], 18: [1, 0, 2, 0, 2, 0], 22: [2, 0, 2, 0, 2, 0], 26: [2, 0, 2, 1, 2, 0], 30: [2, 0, 3, 1, 2, 0], 33: [2, 1, 3, 1, 2, 0], 36: [2, 1, 3, 1, 2, 1], 38: [2, 1, 3, 1, 3, 1], 40: [3, 1, 3, 1, 3, 1], 42: [3, 1, 3, 1, 4, 1], 44: [4, 1, 3, 1, 4, 1], 46: [4, 1, 3, 1, 4, 2], 47: [4, 1, 4, 1, 4, 2], 49: [5, 1, 4, 1, 4, 2], 50: [5, 1, 4, 1, 5, 2] },
+    "Thief": { 1: [0, 0, 0, 0, 0, 0], 2: [0, 1, 0, 0, 0, 0], 6: [1, 1, 0, 0, 0, 0], 10: [1, 1, 0, 0, 1, 0], 14: [1, 1, 1, 0, 1, 0], 18: [1, 1, 1, 1, 1, 0], 22: [1, 1, 1, 1, 2, 0], 26: [1, 1, 1, 1, 2, 1], 30: [2, 1, 1, 1, 2, 1], 33: [2, 2, 1, 1, 2, 1], 36: [2, 3, 1, 1, 2, 1], 38: [3, 3, 1, 1, 2, 1], 40: [3, 3, 1, 1, 2, 2], 42: [3, 3, 1, 1, 3, 2], 44: [3, 3, 2, 1, 3, 2], 46: [3, 3, 2, 1, 3, 3], 47: [4, 3, 2, 1, 3, 3], 49: [4, 3, 2, 1, 4, 3], 50: [4, 4, 2, 1, 4, 3] },
+    "Acolyte": { 1: [0, 0, 0, 0, 0, 0], 2: [0, 0, 0, 0, 0, 1], 6: [0, 0, 1, 0, 0, 1], 10: [0, 0, 1, 1, 0, 1], 14: [0, 0, 1, 1, 1, 1], 18: [0, 0, 1, 1, 1, 2], 22: [0, 1, 1, 1, 1, 2], 26: [1, 1, 1, 1, 1, 2], 30: [1, 1, 2, 1, 1, 2], 36: [1, 1, 2, 2, 2, 2], 38: [1, 1, 2, 2, 2, 3], 40: [1, 2, 2, 2, 2, 3], 42: [2, 2, 2, 2, 2, 3], 44: [2, 2, 3, 2, 2, 3], 46: [2, 2, 3, 3, 3, 3], 49: [3, 2, 3, 3, 3, 3], 50: [3, 2, 3, 3, 3, 4] }
 };
 
 //bonus fomula
@@ -125,23 +125,23 @@ const jobData = {
 };
 
 const jobWeapons = {
-    Novice: ["Hand","Dagger","One-handed Sword","One-handed Axe","One-handed Mace","Two-handed Mace","Rod & Staff","Two-handed Staff"],
-    Swordsman: ["Hand","Dagger","One-handed Sword","Two-handed Sword","One-handed Spear","Two-handed Spear","One-handed Axe","Two-handed Axe","One-handed Mace","Two-handed Mace"],
-    Mage: ["Hand","Dagger","Rod & Staff","Two-handed Staff"],
-    Archer: ["Hand","Dagger","Bow"],
-    Thief: ["Hand","Dagger","One-handed Sword","One-handed Axe","Bow"],
-    Acolyte: ["Hand","One-handed Mace","Two-handed Mace","Rod & Staff","Two-handed Staff"],
-    Merchant: ["Hand","Dagger","One-handed Sword","One-handed Axe","Two-handed Axe","One-handed Mace","Two-handed Mace"]
+    Novice: ["Hand", "Dagger", "One-handed Sword", "One-handed Axe", "One-handed Mace", "Two-handed Mace", "Rod & Staff", "Two-handed Staff"],
+    Swordsman: ["Hand", "Dagger", "One-handed Sword", "Two-handed Sword", "One-handed Spear", "Two-handed Spear", "One-handed Axe", "Two-handed Axe", "One-handed Mace", "Two-handed Mace"],
+    Mage: ["Hand", "Dagger", "Rod & Staff", "Two-handed Staff"],
+    Archer: ["Hand", "Dagger", "Bow"],
+    Thief: ["Hand", "Dagger", "One-handed Sword", "One-handed Axe", "Bow"],
+    Acolyte: ["Hand", "One-handed Mace", "Two-handed Mace", "Rod & Staff", "Two-handed Staff"],
+    Merchant: ["Hand", "Dagger", "One-handed Sword", "One-handed Axe", "Two-handed Axe", "One-handed Mace", "Two-handed Mace"]
 };
 
 const jobWeaponBTBA = {
-    "Novice": { "Hand": 1.0, "Dagger": 1.3, "One-handed Sword": 1.4, "One-handed Axe": 1.6, "One-handed Mace": 1.4, "Two-handed Mace": 1.4, "Rod & Staff": 1.3, "Two-handed Staff": 1.3},
+    "Novice": { "Hand": 1.0, "Dagger": 1.3, "One-handed Sword": 1.4, "One-handed Axe": 1.6, "One-handed Mace": 1.4, "Two-handed Mace": 1.4, "Rod & Staff": 1.3, "Two-handed Staff": 1.3 },
     "Swordsman": { "Hand": 0.8, "Dagger": 1.0, "One-handed Sword": 1.1, "Two-handed Sword": 1.2, "One-handed Spear": 1.3, "Two-handed Spear": 1.4, "One-handed Axe": 1.4, "Two-handed Axe": 1.5, "One-handed Mace": 1.3, "Two-handed Mace": 1.4 },
-    "Mage": { "Hand": 1.0, "Dagger": 1.2, "Rod & Staff": 1.4, "Two-handed Staff": 1.4},
+    "Mage": { "Hand": 1.0, "Dagger": 1.2, "Rod & Staff": 1.4, "Two-handed Staff": 1.4 },
     "Archer": { "Hand": 0.8, "Dagger": 1.2, "Bow": 1.4 },
-    "Thief": { "Hand": 0.8, "Dagger": 1.0, "One-handed Sword": 1.3, "Bow": 1.6},
-    "Acolyte": { "Hand": 0.8, "One-handed Mace": 1.2, "Two-handed Mace": 1.2, "Rod & Staff": 1.2, "Two-handed Staff": 1.2},
-    "Merchant": { "Hand": 0.8, "Dagger": 1.2, "One-handed Sword": 1.4, "One-handed Axe": 1.4, "Two-handed Axe": 1.5, "One-handed Mace": 1.4, "Two-handed Mace": 1.4}
+    "Thief": { "Hand": 0.8, "Dagger": 1.0, "One-handed Sword": 1.3, "Bow": 1.6 },
+    "Acolyte": { "Hand": 0.8, "One-handed Mace": 1.2, "Two-handed Mace": 1.2, "Rod & Staff": 1.2, "Two-handed Staff": 1.2 },
+    "Merchant": { "Hand": 0.8, "Dagger": 1.2, "One-handed Sword": 1.4, "One-handed Axe": 1.4, "Two-handed Axe": 1.5, "One-handed Mace": 1.4, "Two-handed Mace": 1.4 }
 };
 
 const jobWeightModifier = { "Novice": 0, "Swordsman": 800, "Mage": 400, "Archer": 600, "Thief": 400, "Acolyte": 400, "Merchant": 800 };
@@ -158,7 +158,7 @@ function calculateASPD(job, weapon, agi, dex) {
     return Math.min(Math.max(aspd, 0), 190);
 }
 
-function updateWeaponOptions(){
+function updateWeaponOptions() {
     const job = document.getElementById("job").value;
     const weaponSelect = document.getElementById("weapon");
     weaponSelect.innerHTML = "";
@@ -166,7 +166,7 @@ function updateWeaponOptions(){
         let option = document.createElement("option");
         option.value = w; option.textContent = w;
         weaponSelect.appendChild(option);
-    }); 
+    });
 }
 
 // ===============================
@@ -178,8 +178,8 @@ function updateStats(changedStatId) {
     //Validation for Base Level
     const baseLevelInput = document.getElementById("baseLevel");
     let level = parseInt(baseLevelInput.value) || 1;
-    
-    if (level > 99) { level = 99; baseLevelInput.value = 99; } 
+
+    if (level > 99) { level = 99; baseLevelInput.value = 99; }
     else if (level < 1) { level = 1; baseLevelInput.value = 1; }
 
     let jobLevel = parseInt(document.getElementById("jobLevel").value) || 1;
@@ -204,8 +204,8 @@ function updateStats(changedStatId) {
 
     //Point Validation & Automatic Rollback
     let totalPoints = getTotalStatPoints(level);
-    let spentPoints = getTotalCost(rawStats.str) + getTotalCost(rawStats.agi) + getTotalCost(rawStats.vit) + 
-                      getTotalCost(rawStats.int) + getTotalCost(rawStats.dex) + getTotalCost(rawStats.luk);
+    let spentPoints = getTotalCost(rawStats.str) + getTotalCost(rawStats.agi) + getTotalCost(rawStats.vit) +
+        getTotalCost(rawStats.int) + getTotalCost(rawStats.dex) + getTotalCost(rawStats.luk);
 
     // If points are exceeded, force the changed stat down until it is valid
     if (changedStatId && spentPoints > totalPoints) {
@@ -214,8 +214,8 @@ function updateStats(changedStatId) {
         while (spentPoints > totalPoints && parseInt(el.value) > 1) {
             el.value = parseInt(el.value) - 1;
             rawStats[changedStatId] = parseInt(el.value);
-            spentPoints = getTotalCost(rawStats.str) + getTotalCost(rawStats.agi) + getTotalCost(rawStats.vit) + 
-                          getTotalCost(rawStats.int) + getTotalCost(rawStats.dex) + getTotalCost(rawStats.luk);
+            spentPoints = getTotalCost(rawStats.str) + getTotalCost(rawStats.agi) + getTotalCost(rawStats.vit) +
+                getTotalCost(rawStats.int) + getTotalCost(rawStats.dex) + getTotalCost(rawStats.luk);
         }
         // Proceed with the new corrected values
     }
@@ -234,7 +234,7 @@ function updateStats(changedStatId) {
         luk: rawStats.luk + bonuses[5]
     };
 
-   //required cost
+    //required cost
     const statKeys = ['str', 'agi', 'vit', 'int', 'dex', 'luk'];
     statKeys.forEach(key => { document.getElementById(key + "Req").innerText = getStatCost(rawStats[key]); });
 
@@ -257,7 +257,7 @@ function updateStats(changedStatId) {
     hpBar.querySelector("span").innerText = Math.floor(hpPercent) + "%";
     spBar.style.width = spPercent + "%";
     spBar.querySelector("span").innerText = Math.floor(spPercent) + "%";
-    
+
     //hp,sp regen
     document.getElementById("hpRegen").innerText = calculateHPRegen(maxHP, stats.vit, job);
     document.getElementById("spRegen").innerText = calculateSPRegen(maxSP, stats.int);
@@ -265,15 +265,15 @@ function updateStats(changedStatId) {
 
 
     //status information
-    let baseAtk = (weapon === "Bow") 
+    let baseAtk = (weapon === "Bow")
         ? (stats.dex + Math.pow(Math.floor(stats.dex / 10), 2) + Math.floor(stats.str / 5) + Math.floor(stats.luk / 5))
         : (stats.str + Math.pow(Math.floor(stats.str / 10), 2) + Math.floor(stats.dex / 5) + Math.floor(stats.luk / 5));
     document.getElementById("atk").innerText = baseAtk + " + 0";
-    
+
     let matkMin = stats.int + Math.pow(Math.floor(stats.int / 7), 2);
     let matkMax = stats.int + Math.pow(Math.floor(stats.int / 5), 2);
     document.getElementById("matk").innerText = matkMin + " ~ " + matkMax;
-    
+
     document.getElementById("def").innerText = "0 + " + stats.vit;
     document.getElementById("mdef").innerText = "0 + " + stats.int;
     document.getElementById("hit").innerText = level + stats.dex;
