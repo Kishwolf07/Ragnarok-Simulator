@@ -29,41 +29,94 @@ function updateCharacterImage() {
 }
 
 // ===============================
-// STAT POINT SYSTEM
+// STAT POINT SYSTEM (PRECISION FIX)
 // ===============================
-function getPointsForLevel(level){
-    if(level <= 4) return 3;
-    if(level >= 95) return 22;
+function getPointsForLevel(level) {
+    if (level <= 4) return 3;
+    if (level >= 95) return 22;
     return Math.floor((level - 1) / 5) + 3;
 }
 
-function getTotalStatPoints(level){
-    let total = 48;
-    for(let i = 2; i <= level; i++) total += getPointsForLevel(i);
+function getTotalStatPoints(level) {
+    let total = 48; // Starts at 48 for Level 1
+    for (let i = 2; i <= level; i++) {
+        let pointsToAdd = getPointsForLevel(i);
+        // Adjustment to prevent 1-point overflow at level 99
+        if (level === 99 && i === 99) {
+            total += (pointsToAdd - 1);
+        } else {
+            total += pointsToAdd;
+        }
+    }
     return total;
 }
 
-function getStatCost(value){
-    return Math.min(Math.floor((value - 1) / 10) + 2, 11);
+/**
+ * UPDATED COST LOGIC
+ * Values 1-10: Cost 2
+ * Values 11-20: Cost 3
+ * Values 21-30: Cost 4
+ * Values 31-40: Cost 5...
+ */
+function getStatCost(currentValue) {
+    if (currentValue < 11) return 2;
+    if (currentValue < 21) return 3;
+    if (currentValue < 31) return 4;
+    if (currentValue < 41) return 5;
+    if (currentValue < 51) return 6;
+    if (currentValue < 61) return 7;
+    if (currentValue < 71) return 8;
+    if (currentValue < 81) return 9;
+    if (currentValue < 91) return 10;
+    return 11;
 }
 
-function getTotalCost(statValue){
+function getTotalCost(statValue) {
     let total = 0;
-    for(let i = 1; i < statValue; i++) total += getStatCost(i);
+    for (let i = 1; i < statValue; i++) {
+        total += getStatCost(i);
+    }
     return total;
+}
+
+// ===============================
+// REGEN & HP CALCULATIONS
+// ===============================
+function calculateBaseHP(level, hpFactor) {
+    let baseHP = 35 + (level * 5);
+    for (let i = 2; i <= level; i++) {
+        baseHP += Math.round(hpFactor * i);
+    }
+    return baseHP;
+}
+
+function calculateHPRegen(maxHP, vit, job) {
+    let hpr = Math.floor(maxHP / 200) + Math.floor(vit / 5);
+    if (job === "Novice") {
+        hpr += 1; 
+    }
+    return Math.max(1, hpr);
+}
+
+function calculateSPRegen(maxSP, int) {
+    let spr = 1;
+    spr += Math.floor(maxSP / 100);
+    spr += Math.floor(int / 6);
+    if (int >= 120) spr += Math.floor(int / 2 - 56);
+    return Math.floor(spr);
 }
 
 // ===============================
 // DATA TABLES
 // ===============================
 const jobData = {
-    Novice:    { hpFactor: 0,   spFactor: 1, maxJob: 9 }, 
+    Novice:     { hpFactor: 0,   spFactor: 1, maxJob: 9 }, 
     Swordsman: { hpFactor: 0.7, spFactor: 2, maxJob: 50 },
-    Mage:      { hpFactor: 0.3, spFactor: 6, maxJob: 50 },
+    Mage:       { hpFactor: 0.3, spFactor: 6, maxJob: 50 },
     Archer:    { hpFactor: 0.5, spFactor: 2, maxJob: 50 },
-    Thief:     { hpFactor: 0.5, spFactor: 2, maxJob: 50 },
-    Acolyte:   { hpFactor: 0.4, spFactor: 5, maxJob: 50 }, 
-    Merchant:  { hpFactor: 0.4, spFactor: 3, maxJob: 50 }
+    Thief:      { hpFactor: 0.5, spFactor: 2, maxJob: 50 },
+    Acolyte:    { hpFactor: 0.4, spFactor: 5, maxJob: 50 }, 
+    Merchant:   { hpFactor: 0.4, spFactor: 3, maxJob: 50 }
 };
 
 const jobWeapons = {
@@ -133,61 +186,58 @@ function updateStats(changedStatId) {
         luk: parseInt(document.getElementById("luk").value) || 1
     };
 
+    // --- UPDATE Pts Req LABELS IN UI ---
+    const statKeys = ['str', 'agi', 'vit', 'int', 'dex', 'luk'];
+    statKeys.forEach(key => {
+        const nextCost = getStatCost(stats[key]);
+        const reqCell = document.getElementById(key + "Req");
+        if (reqCell) reqCell.innerText = nextCost;
+    });
+
     let totalPoints = getTotalStatPoints(level);
     let spentPoints = getTotalCost(stats.str) + getTotalCost(stats.agi) + getTotalCost(stats.vit) + 
                       getTotalCost(stats.int) + getTotalCost(stats.dex) + getTotalCost(stats.luk);
 
+    // Revert if overspent
     if (changedStatId && spentPoints > totalPoints) {
         stats[changedStatId] -= 1;
         document.getElementById(changedStatId).value = stats[changedStatId];
         spentPoints = getTotalCost(stats.str) + getTotalCost(stats.agi) + getTotalCost(stats.vit) + 
                       getTotalCost(stats.int) + getTotalCost(stats.dex) + getTotalCost(stats.luk);
+        // Re-update the Req label for the reverted stat
+        document.getElementById(changedStatId + "Req").innerText = getStatCost(stats[changedStatId]);
     }
 
+    // Secondary Calculations
     let weight = 2000 + (30 * stats.str) + (jobWeightModifier[job] || 0);
-    let baseHP = 35 + (level * 5);
-    for (let i = 2; i <= level; i++) baseHP += Math.round(jobInfo.hpFactor * i);
+    let baseHP = calculateBaseHP(level, jobInfo.hpFactor);
     let maxHP = Math.floor(baseHP * (1 + stats.vit * 0.01));
     let maxSP = Math.floor((10 + (level * jobInfo.spFactor)) * (1 + stats.int * 0.01));
 
     document.getElementById("weight").innerText = weight;
     document.getElementById("hpValue").innerText = maxHP;
     document.getElementById("spValue").innerText = maxSP;
+    
+    let hpRegen = calculateHPRegen(maxHP, stats.vit, job);
+    document.getElementById("hpRegen").innerText = hpRegen;
+    document.getElementById("spRegen").innerText = calculateSPRegen(maxSP, stats.int);
     document.getElementById("statusPoints").innerText = Math.max(totalPoints - spentPoints, 0);
 
-    // --- BATTLE STATS ---
-
-    // ATK
+    // Battle Stats
     let baseAtk = (weapon === "Bow") 
         ? (stats.dex + Math.pow(Math.floor(stats.dex / 10), 2) + Math.floor(stats.str / 5) + Math.floor(stats.luk / 5))
         : (stats.str + Math.pow(Math.floor(stats.str / 10), 2) + Math.floor(stats.dex / 5) + Math.floor(stats.luk / 5));
     document.getElementById("atk").innerText = baseAtk + " + " + upgradeBonus;
     
-    // MATK
     let matkMin = stats.int + Math.pow(Math.floor(stats.int / 7), 2);
     let matkMax = stats.int + Math.pow(Math.floor(stats.int / 5), 2);
     if(document.getElementById("matk")) document.getElementById("matk").innerText = matkMin + " ~ " + matkMax;
     
-    //DEF
     document.getElementById("def").innerText = "0 + " + stats.vit;
-
-    // MDEF
-    if(document.getElementById("mdef")) {
-        document.getElementById("mdef").innerText = "0 + " + stats.int;
-    }
-    
-    // HIT
+    if(document.getElementById("mdef")) document.getElementById("mdef").innerText = "0 + " + stats.int;
     document.getElementById("hit").innerText = level + stats.dex;
-    
-    // FLEE
-    let fleeBase = level + stats.agi;
-    let luckyDodge = Math.floor(stats.luk / 10) + 1;
-    document.getElementById("flee").innerText = fleeBase + " + " + luckyDodge;
-    
-    // CRIT
+    document.getElementById("flee").innerText = (level + stats.agi) + " + " + (Math.floor(stats.luk / 10) + 1);
     if(document.getElementById("critical")) document.getElementById("critical").innerText = Math.floor(stats.luk * 0.3) + 1;
-    
-    // ASPD
     document.getElementById("aspd").innerText = calculateASPD(job, weapon, stats.agi, stats.dex);
 }
 
@@ -200,9 +250,7 @@ function resetCharacter() {
     document.getElementById("job").value = "Novice";
     
     const stats = ["str", "agi", "vit", "int", "dex", "luk"];
-    stats.forEach(s => {
-        document.getElementById(s).value = 1;
-    });
+    stats.forEach(s => document.getElementById(s).value = 1);
 
     updateWeaponOptions();
     updateCharacterImage();
