@@ -1,18 +1,61 @@
-body {
+body{
     margin:0;
     font-family:'Trebuchet MS',sans-serif;
+
     background:url("img/RAGNAROK.png") center/cover no-repeat fixed;
-    color:white;
 
     display:flex;
     justify-content:center;
     align-items:center;
+
     min-height:100vh;
+    color:#e6f7ff;
+}
+
+/* dark overlay */
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.75);
+    z-index:-1;
+}
+
+@keyframes starsMove{
+    from{transform:translateY(0);}
+    to{transform:translateY(-500px);}
 }
 .reset-button{
-    width: 100%;
-    margin-top: 10px; 
-    cursor: pointer;
+    width:100%;
+    padding:9px;
+
+    border:none;
+
+    border-radius:6px;
+
+    font-weight:bold;
+
+    color:#000;
+
+    background:linear-gradient(
+        180deg,
+        #ffd96a,
+        #c8a94c
+    );
+
+    cursor:pointer;
+
+    transition:0.2s;
+}
+
+.reset-button:hover{
+    transform:scale(1.05);
+
+    background:linear-gradient(
+        180deg,
+        #fff2a6,
+        #e0c25c
+    );
 }
 
 .character-box img.character-gif {
@@ -124,24 +167,36 @@ body::after {
     font-size:14px;
 }
 
-.status-panel {
-    width:90%;
-    max-width:1100px;
-    padding:20px;
+.status-columns table:nth-child(2) {
+    margin-left: 30px; 
+}
 
-    background:rgba(0,0,50,0.2);
-    border-radius:15px;
-    border:1px solid rgba(0,150,255,0.5);
+.status-columns table th {
+    padding-right: 35px; 
+}
 
-    backdrop-filter:blur(10px);
+.status-table th, .status-table td {
+    border: none !important;
+}
 
-    /* glowing light */
+.status-panel{
+    width:1000px;
+    padding:28px;
+
+    background:linear-gradient(
+        180deg,
+        rgba(8,18,40,0.95),
+        rgba(4,10,25,0.95)
+    );
+
+    border-radius:14px;
+
+    border:2px solid #c8a94c;
+
     box-shadow:
-        0 0 8px rgba(0,150,255,0.4),
-        0 0 20px rgba(0,150,255,0.3),
-        0 0 40px rgba(0,150,255,0.2);
-
-    animation: blueGlow 4s ease-in-out infinite alternate;
+        0 0 20px rgba(0,0,0,0.8),
+        0 0 40px rgba(0,0,0,0.7),
+        inset 0 0 25px rgba(0,0,0,0.9);
 }
 @keyframes blueGlow {
     0% {
@@ -159,16 +214,26 @@ body::after {
     }
 }
 
-.status-panel h2 {
+.status-panel h2{
     text-align:center;
-    margin-bottom:20px;
-    font-size:26px;
-    text-shadow:0 0 6px rgba(0,150,255,0.4);
+
+    font-size:30px;
+
+    color:#ffd96a;
+
+    letter-spacing:2px;
+
+    margin-bottom:25px;
+
+    text-shadow:
+        0 0 5px #000,
+        0 0 10px #c8a94c,
+        0 0 20px #c8a94c;
 }
 
-.main-layout {
+.main-layout{
     display:flex;
-    gap:20px;
+    gap:28px;
     align-items:flex-start;
 }
 
@@ -179,12 +244,23 @@ body::after {
     gap:15px;
 }
 
-.character-box {
+.character-box{
     width:100%;
-    height:380px;
-    border-radius:12px;
-    overflow:hidden;
-    border:1px solid rgba(0,150,255,0.5);
+    height:360px;
+
+    background:#050b1c;
+
+    border-radius:10px;
+
+    border:2px solid #c8a94c;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+        inset 0 0 25px black,
+        0 0 10px rgba(0,0,0,0.8);
 }
 
 .character-box video {
@@ -219,34 +295,49 @@ body::after {
     border:1px solid rgba(0,150,255,0.6);
 }
 
-.fill {
+.fill{
     height:100%;
     width:0%;
     display:flex;
     align-items:center;
     justify-content:center;
+
     color:white;
-    font-size:12px;
+    font-size:11px;
     font-weight:bold;
+
     transition:width 0.4s ease;
+
+    text-shadow:0 0 3px black;
 }
 
-.hp-fill {
-    background:linear-gradient(90deg,#ff4d4d,#ff0000);
+.hp-fill{
+    background:linear-gradient(
+        90deg,
+        #8b0000,
+        #ff0000
+    );
 }
 
-.sp-fill {
-    background:linear-gradient(90deg,#4da6ff,#0066ff);
+.sp-fill{
+    background:linear-gradient(
+        90deg,
+        #003d8f,
+        #0099ff
+    );
 }
-
 .right-panel { flex:1; }
 
-.character-setup {
-    padding:12px;
-    margin-bottom:15px;
-    background:rgba(0,0,100,0.45);
+.character-setup{
+    padding:16px;
+
+    margin-bottom:18px;
+
+    background:#0a1430;
+
     border-radius:10px;
-    border:1px solid rgba(0,150,255,0.5);
+
+    border:1px solid #c8a94c;
 }
 
 .character-setup h3 {
@@ -259,15 +350,20 @@ body::after {
     margin-bottom:10px;
 }
 
-select,input[type=number] {
-    background:rgba(0,0,120,0.4);
-    border:1px solid rgba(0,150,255,0.6);
-    color:white;
-    border-radius:5px;
+select,
+input[type=number]{
+    background:#050b1c;
+
+    border:1px solid #c8a94c;
+
+    color:#fff;
+
+    border-radius:4px;
+
     padding:4px 6px;
+
     text-align:center;
 }
-
 /* Container for Stats and Status boxes */
 .tables-container {
     display:flex;
@@ -276,12 +372,16 @@ select,input[type=number] {
 }
 
 /* Box styling */
-.table-box {
+.table-box{
     flex:1;
-    background:rgba(0,0,50,0.15);
-    border:1px solid rgba(0,150,255,0.3);
-    border-radius:8px;
-    padding:8px;
+
+    background:#0c1635;
+
+    border:1px solid #c8a94c;
+
+    border-radius:10px;
+
+    padding:12px;
 }
 
 .table-box h4 {
@@ -297,6 +397,19 @@ select,input[type=number] {
     border:1px solid rgba(0,150,255,0.5);
 }
 
+.stats-table th{
+     background:#0f1f48;
+     color:#ffd96a;
+}
+
+.stats-table td{
+    background:#08112b;
+}
+
+.stats-table tr:hover{
+    background:#122a66;
+}
+
 .stats-table th, .stats-table td {
     padding:6px;
     text-align:center;
@@ -309,10 +422,8 @@ select,input[type=number] {
     gap:10px;
 }
 
-.status-columns table {
-    flex:1;
-    border-collapse:collapse;
-    border:1px solid rgba(0,150,255,0.5);
+.status-columns table{
+    background:#08112b;
 }
 
 .status-columns th, .status-columns td {
@@ -321,8 +432,8 @@ select,input[type=number] {
     border:1px solid rgba(0,150,255,0.5);
 }
 
-.status-columns th {
-    color: white;
+.status-columns th{
+    color:#ffd96a;
 }
 
 /* Remaining Points */

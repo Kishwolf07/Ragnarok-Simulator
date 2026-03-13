@@ -172,41 +172,58 @@ function updateWeaponOptions(){
 // ===============================
 // MAIN UPDATE FUNCTION
 // ===============================
+
 function updateStats(changedStatId) {
 
     //Validation for Base Level
     const baseLevelInput = document.getElementById("baseLevel");
     let level = parseInt(baseLevelInput.value) || 1;
     
-    if (level > 99) {
-        level = 99;
-        baseLevelInput.value = 99;
-    } else if (level < 1) {
-        level = 1;
-        baseLevelInput.value = 1;
-    }
+    if (level > 99) { level = 99; baseLevelInput.value = 99; } 
+    else if (level < 1) { level = 1; baseLevelInput.value = 1; }
 
     let jobLevel = parseInt(document.getElementById("jobLevel").value) || 1;
     let job = document.getElementById("job").value;
     let weapon = document.getElementById("weapon").value;
     let jobInfo = jobData[job] || jobData["Novice"];
 
-    if (parseInt(document.getElementById("jobLevel").value) > jobInfo.maxJob) document.getElementById("jobLevel").value = jobInfo.maxJob;
+    if (parseInt(document.getElementById("jobLevel").value) > jobInfo.maxJob) {
+        document.getElementById("jobLevel").value = jobInfo.maxJob;
+    }
 
-    // Get Bonuses
+    // Calculate effective stats
+    // We use Math.max(1, ...) to ensure stats never drop below 1
+    let rawStats = {
+        str: Math.max(1, parseInt(document.getElementById("str").value) || 1),
+        agi: Math.max(1, parseInt(document.getElementById("agi").value) || 1),
+        vit: Math.max(1, parseInt(document.getElementById("vit").value) || 1),
+        int: Math.max(1, parseInt(document.getElementById("int").value) || 1),
+        dex: Math.max(1, parseInt(document.getElementById("dex").value) || 1),
+        luk: Math.max(1, parseInt(document.getElementById("luk").value) || 1)
+    };
+
+    //Point Validation & Automatic Rollback
+    let totalPoints = getTotalStatPoints(level);
+    let spentPoints = getTotalCost(rawStats.str) + getTotalCost(rawStats.agi) + getTotalCost(rawStats.vit) + 
+                      getTotalCost(rawStats.int) + getTotalCost(rawStats.dex) + getTotalCost(rawStats.luk);
+
+    // If points are exceeded, force the changed stat down until it is valid
+    if (changedStatId && spentPoints > totalPoints) {
+        let el = document.getElementById(changedStatId);
+        // This loop aggressively lowers the value until it fits the points
+        while (spentPoints > totalPoints && parseInt(el.value) > 1) {
+            el.value = parseInt(el.value) - 1;
+            rawStats[changedStatId] = parseInt(el.value);
+            spentPoints = getTotalCost(rawStats.str) + getTotalCost(rawStats.agi) + getTotalCost(rawStats.vit) + 
+                          getTotalCost(rawStats.int) + getTotalCost(rawStats.dex) + getTotalCost(rawStats.luk);
+        }
+        // Proceed with the new corrected values
+    }
+
+    //bonus calculation
     const bonuses = getBonusForJobLevel(job, jobLevel);
     const bonusIds = ["strBonus", "agiBonus", "vitBonus", "intBonus", "dexBonus", "lukBonus"];
     bonusIds.forEach((id, index) => { document.getElementById(id).innerText = bonuses[index]; });
-
-    // Calculate effective stats
-    let rawStats = {
-        str: parseInt(document.getElementById("str").value) || 1,
-        agi: parseInt(document.getElementById("agi").value) || 1,
-        vit: parseInt(document.getElementById("vit").value) || 1,
-        int: parseInt(document.getElementById("int").value) || 1,
-        dex: parseInt(document.getElementById("dex").value) || 1,
-        luk: parseInt(document.getElementById("luk").value) || 1
-    };
 
     let stats = {
         str: rawStats.str + bonuses[0],
@@ -217,24 +234,17 @@ function updateStats(changedStatId) {
         luk: rawStats.luk + bonuses[5]
     };
 
-    // UI Cost labels
+   //required cost
     const statKeys = ['str', 'agi', 'vit', 'int', 'dex', 'luk'];
     statKeys.forEach(key => { document.getElementById(key + "Req").innerText = getStatCost(rawStats[key]); });
 
-    let totalPoints = getTotalStatPoints(level);
-    let spentPoints = getTotalCost(rawStats.str) + getTotalCost(rawStats.agi) + getTotalCost(rawStats.vit) + 
-                      getTotalCost(rawStats.int) + getTotalCost(rawStats.dex) + getTotalCost(rawStats.luk);
-
-    if (changedStatId && spentPoints > totalPoints) {
-        document.getElementById(changedStatId).value = parseInt(document.getElementById(changedStatId).value) - 1;
-        updateStats(); return;
-    }
-
+    //weight
     let weight = 2000 + (30 * stats.str) + (jobWeightModifier[job] || 0);
     let baseHP = calculateBaseHP(level, jobInfo.hpFactor);
     let maxHP = Math.floor(baseHP * (1 + stats.vit * 0.01));
     let maxSP = Math.floor((10 + (level * jobInfo.spFactor)) * (1 + stats.int * 0.01));
 
+    //hp,sp value
     document.getElementById("weight").innerText = weight;
     document.getElementById("hpValue").innerText = maxHP;
     document.getElementById("spValue").innerText = maxSP;
@@ -247,11 +257,14 @@ function updateStats(changedStatId) {
     hpBar.querySelector("span").innerText = Math.floor(hpPercent) + "%";
     spBar.style.width = spPercent + "%";
     spBar.querySelector("span").innerText = Math.floor(spPercent) + "%";
-        
+    
+    //hp,sp regen
     document.getElementById("hpRegen").innerText = calculateHPRegen(maxHP, stats.vit, job);
     document.getElementById("spRegen").innerText = calculateSPRegen(maxSP, stats.int);
     document.getElementById("statusPoints").innerText = Math.max(totalPoints - spentPoints, 0);
 
+
+    //status information
     let baseAtk = (weapon === "Bow") 
         ? (stats.dex + Math.pow(Math.floor(stats.dex / 10), 2) + Math.floor(stats.str / 5) + Math.floor(stats.luk / 5))
         : (stats.str + Math.pow(Math.floor(stats.str / 10), 2) + Math.floor(stats.dex / 5) + Math.floor(stats.luk / 5));
@@ -269,6 +282,7 @@ function updateStats(changedStatId) {
     document.getElementById("aspd").innerText = calculateASPD(job, weapon, stats.agi, stats.dex);
 }
 
+//reset button function
 function resetCharacter() {
     document.getElementById("baseLevel").value = 1;
     document.getElementById("jobLevel").value = 1;
