@@ -93,16 +93,31 @@ function getTotalCost(statValue) {
 // ===============================
 // REGEN & HP CALCULATIONS
 // ===============================
-function calculateBaseHP(level, hpFactor) {
-    let baseHP = 35 + (level * 5);
-    for (let i = 2; i <= level; i++) baseHP += Math.round(hpFactor * i);
+function calculateBaseHP(level, hpFactor, job) {
+    // Swordsmen get a +2 head-start in the engine's HP constants
+    let baseHP = (job === "Swordsman") ? 37 : 35;
+    
+    // Add the level-based growth (Level * 5)
+    baseHP += (level * 5); 
+
+    // Use Math.round as we confirmed it matches the engine
+    for (let i = 2; i <= level; i++) {
+        baseHP += Math.round(hpFactor * i); 
+    }
+    
     return baseHP;
 }
 
-function calculateHPRegen(maxHP, vit, job) {
-    let hpr = Math.floor(maxHP / 200) + Math.floor(vit / 5);
-    if (job === "Novice") hpr += 1;
-    return Math.max(1, hpr);
+function calculateHPRegen(maxHP, vit, hprMod = 0) {
+    //Base recovery from HP
+    let hpPart = Math.floor(maxHP / 200);
+    //Base recovery from VIT
+    let vitPart = Math.floor(vit / 5);
+    let baseConstant = 1;
+    let hpr = hpPart + vitPart + baseConstant;
+    hpr = Math.floor(hpr * (1 + hprMod * 0.01));
+
+    return hpr;
 }
 
 function calculateSPRegen(maxSP, int) {
@@ -240,7 +255,7 @@ function updateStats(changedStatId) {
 
     //weight
     let weight = 2000 + (30 * stats.str) + (jobWeightModifier[job] || 0);
-    let baseHP = calculateBaseHP(level, jobInfo.hpFactor);
+    let baseHP = calculateBaseHP(level, jobInfo.hpFactor, job);   
     let maxHP = Math.floor(baseHP * (1 + stats.vit * 0.01));
     let maxSP = Math.floor((10 + (level * jobInfo.spFactor)) * (1 + stats.int * 0.01));
 
@@ -254,12 +269,13 @@ function updateStats(changedStatId) {
     const hpBar = document.getElementById("hpBar");
     const spBar = document.getElementById("spBar");
     hpBar.style.width = hpPercent + "%";
-    hpBar.querySelector("span").innerText = Math.floor(hpPercent) + "%";
+    hpBar.querySelector("span").innerText = Math.floor(hpPercent) + "%";    
     spBar.style.width = spPercent + "%";
     spBar.querySelector("span").innerText = Math.floor(spPercent) + "%";
 
     //hp,sp regen
-    document.getElementById("hpRegen").innerText = calculateHPRegen(maxHP, stats.vit, job);
+    const hpr = calculateHPRegen(maxHP, stats.vit);
+    document.getElementById("hpRegen").innerText = hpr;
     document.getElementById("spRegen").innerText = calculateSPRegen(maxSP, stats.int);
     document.getElementById("statusPoints").innerText = Math.max(totalPoints - spentPoints, 0);
 

@@ -1,947 +1,419 @@
-body{
-
-    margin:0;
-
-    font-family:'Trebuchet MS',sans-serif;
-
-
-
-    background:url("img/RAGNAROK.png") center/cover no-repeat fixed;
-
-
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-
-
-    min-height:100vh;
-
-    color:#e6f7ff;
-
+/* --- 1. Base Styles & Global Animations --- */
+@keyframes panelGlow {
+    0% {
+        box-shadow: 0 0 10px rgba(200, 169, 76, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(200, 169, 76, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(200, 169, 76, 0.2);
+    }
 }
 
-
-
-/* dark overlay */
-
-body::after{
-
-    content:"";
-
-    position:fixed;
-
-    inset:0;
-
-    background:rgba(0,0,0,0.75);
-
-    z-index:-1;
-
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
 }
 
-
-
-@keyframes starsMove{
-
-    from{transform:translateY(0);}
-
-    to{transform:translateY(-500px);}
-
+body {
+    margin: 0;
+    font-family: 'Trebuchet MS', sans-serif;
+    background: url("img/RAGNAROK.png") center/cover no-repeat fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #e6f7ff;
 }
-
-.reset-button{
-
-    width:100%;
-
-    padding:9px;
-
-
-
-    border:none;
-
-
-
-    border-radius:6px;
-
-
-
-    font-weight:bold;
-
-
-
-    color:#000;
-
-
-
-    background:linear-gradient(
-
-        180deg,
-
-        #ffd96a,
-
-        #c8a94c
-
-    );
-
-
-
-    cursor:pointer;
-
-
-
-    transition:0.2s;
-
-}
-
-
-
-.reset-button:hover{
-
-    transform:scale(1.05);
-
-
-
-    background:linear-gradient(
-
-        180deg,
-
-        #fff2a6,
-
-        #e0c25c
-
-    );
-
-}
-
-
-
-.character-box img.character-gif {
-
-    width: 100%;
-
-    height: 100%;
-
-    object-fit: cover;
-
-    border-radius: 12px;
-
-    transform: scale(0.9);
-
-    transform-origin: center;
-
-    transition: opacity 0.2s ease-in-out;
-
-}
-
-
-
-/* Gender Switch Container */
-
-.gender-switch {
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    margin-bottom:10px;
-
-}
-
-
-
-/* Switch Style */
-
-.switch {
-
-    position:relative;
-
-    display:inline-block;
-
-    width:60px;
-
-    height:28px;
-
-}
-
-
-
-.switch input {
-
-    opacity:0;
-
-    width:0;
-
-    height:0;
-
-}
-
-
-
-.slider {
-
-    position:absolute;
-
-    cursor:pointer;
-
-    inset:0;
-
-    background-color:#00bfff;
-
-    transition:.3s;
-
-    border-radius:24px;
-
-
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-}
-
-
-
-/* Toggle circle */
-
-.slider:before {
-
-    content:"";
-
-    position:absolute;
-
-    height:20px;
-
-    width:20px;
-
-    left:4px;
-
-    bottom:4px;
-
-    background:white;
-
-    transition:.3s;
-
-    border-radius:50%;
-
-}
-
-/* Gender icon inside switch */
-
-.gender-symbol{
-
-    font-size:20px;
-
-    font-weight:900;
-
-    color:#fff;
-
-    z-index:2;
-
-    transition:0.3s;
-
-
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-
-
-    text-shadow:
-
-        0 0 4px rgba(0,0,0,0.9),
-
-        0 0 6px rgba(0,191,255,0.7);
-
-}
-
-
-
-/* Female state */
-
-input:checked + .slider{
-
-    background-color:#ff69b4;
-
-}
-
-
-
-input:checked + .slider:before {
-
-    transform:translateX(30px);
-
-}
-
-
-
-input:checked + .slider .gender-symbol{
-
-    color:#fff;
-
-}
-
-
 
 body::after {
-
-    content:"";
-
-    position:fixed;
-
-    inset:0;
-
-    background:rgba(0,0,0,0.6);
-
-    z-index:-1;
-
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: -1;
 }
 
-
-
-.stat-icon{
-
-    width:26px;
-
-    height:26px;
-
-    margin-right:8px;
-
-    object-fit:contain;
-
+/* ---Main Panel & Glass-morphism --- */
+.status-panel {
+    width: 1000px;
+    padding: 20px;
+    background: linear-gradient(180deg, rgba(8, 18, 40, 0.85), rgba(4, 10, 25, 0.95));
+    backdrop-filter: blur(10px);
+    border-radius: 14px;
+    border: 2px solid #c8a94c;
+    animation: panelGlow 4s infinite ease-in-out;
 }
 
-
-
-.status-columns th{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    font-size:14px;
-
+.status-panel h2 {
+    text-align: center;
+    font-size: 30px;
+    color: #ffd96a;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+    text-shadow: 0 0 5px #000, 0 0 10px #c8a94c, 0 0 20px #c8a94c;
 }
 
-
-
-.status-panel{
-
-    width:1000px;
-
-    padding:28px;
-
-
-
-    background:linear-gradient(
-
-        180deg,
-
-        rgba(8,18,40,0.95),
-
-        rgba(4,10,25,0.95)
-
-    );
-
-
-
-    border-radius:14px;
-
-
-
-    border:2px solid #c8a94c;
-
-
-
-    box-shadow:
-
-        0 0 20px rgba(0,0,0,0.8),
-
-        0 0 40px rgba(0,0,0,0.7),
-
-        inset 0 0 25px rgba(0,0,0,0.9);
-
+/* --- 3. Character Box --- */
+.character-box {
+    order: 0;
+    margin-top: 0;  /* start at top */
+    width: 100%;
+    height: 400px;
+    background: #050b1c;
+    border-radius: 10px;
+    border: 2px solid #c8a94c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 25px black, 0 0 10px rgba(0, 0, 0, 0.8);
+    position: relative;
+    overflow: hidden;
 }
 
-@keyframes blueGlow {
-
-    0% {
-
-        box-shadow:
-
-            0 0 6px rgba(0,150,255,0.3),
-
-            0 0 15px rgba(0,150,255,0.25),
-
-            0 0 30px rgba(0,150,255,0.15);
-
-    }
-
-
-
-    100% {
-
-        box-shadow:
-
-            0 0 12px rgba(0,180,255,0.6),
-
-            0 0 30px rgba(0,180,255,0.45),
-
-            0 0 60px rgba(0,180,255,0.3);
-
-    }
-
+.character-box::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: radial-gradient(circle, rgba(0, 191, 255, 0.2), transparent 70%);
+    z-index: 0;
 }
 
-
-
-.status-panel h2{
-
-    text-align:center;
-
-
-
-    font-size:30px;
-
-
-
-    color:#ffd96a;
-
-
-
-    letter-spacing:2px;
-
-
-
-    margin-bottom:25px;
-
-
-
-    text-shadow:
-
-        0 0 5px #000,
-
-        0 0 10px #c8a94c,
-
-        0 0 20px #c8a94c;
-
+.character-box img.character-gif {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    transform: scale(0.9);
+    transform-origin: center;
+    transition: opacity 0.2s ease-in-out;
+    position: relative;
+    z-index: 1;
 }
 
-
-
-.main-layout{
-
-    display:flex;
-
-    gap:28px;
-
-    align-items:flex-start;
-
-}
-
-
-
-.left-panel {
-
-    flex:0 0 260px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:15px;
-
-}
-
-
-
-.character-box{
-
-    width:100%;
-
-    height:360px;
-
-
-
-    background:#050b1c;
-
-
-
-    border-radius:10px;
-
-
-
-    border:2px solid #c8a94c;
-
-
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-
-
-    box-shadow:
-
-        inset 0 0 25px black,
-
-        0 0 10px rgba(0,0,0,0.8);
-
-}
-
-
-
-.character-box video {
-
-    width:100%;
-
-    height:100%;
-
-    object-fit:cover;
-
-}
-
-
-
+/* ---  HP/SP Box & Bars --- */
 .hp-sp-box {
-
-    background:rgba(0,0,120,0.5);
-
-    padding:10px;
-
-    border-radius:10px;
-
-    border:1px solid rgba(0,150,255,0.5);
-
+    background: rgba(8, 18, 40, 0.95);
+    padding: 15px; /* Increased padding for more breathing room */
+    border-radius: 10px;
+    border: 1px solid #c8a94c;
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Added gap between rows */
 }
-
-
 
 .bar-row {
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:6px;
-
-    font-size:14px;
-
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    white-space: nowrap;
+    padding: 2px 0; /* Added slight vertical padding */
 }
 
-
-
-/* Custom HP/SP Bars */
+.bar-row span {
+    margin-right: 15px; /* Slightly increased margin */
+    min-width: 90px; /* Added min-width to keep labels aligned */
+}
 
 .custom-bar {
-
-    width:150px;
-
-    height:18px;
-
-    background:rgba(0,0,0,0.5);
-
-    border-radius:10px;
-
-    overflow:hidden;
-
-    position:relative;
-
-    border:1px solid rgba(0,150,255,0.6);
-
+    flex-grow: 1;
+    max-width: 150px; 
+    height: 20px; /* Increased height slightly for a less cramped look */
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #c8a94c;
 }
 
-
-
-.fill{
-
-    height:100%;
-
-    width:0%;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-
-
-    color:white;
-
-    font-size:11px;
-
-    font-weight:bold;
-
-
-
-    transition:width 0.4s ease;
-
-
-
-    text-shadow:0 0 3px black;
-
+.regen-info {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px; /* Added space above the regen text */
+    font-size: 13px;
+    color: #ffd96a;
 }
 
-
-
-.hp-fill{
-
-    background:linear-gradient(
-
-        90deg,
-
-        #8b0000,
-
-        #ff0000
-
-    );
-
+.fill {
+    height: 100%;
+    width: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-shadow: 0 0 3px black;
+    position: relative;
 }
 
-
-
-.sp-fill{
-
-    background:linear-gradient(
-
-        90deg,
-
-        #003d8f,
-
-        #0099ff
-
-    );
-
+.fill::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
 }
 
-.right-panel { flex:1; }
-
-
-
-.character-setup{
-
-    padding:16px;
-
-
-
-    margin-bottom:18px;
-
-
-
-    background:#0a1430;
-
-
-
-    border-radius:10px;
-
-
-
-    border:1px solid #c8a94c;
-
+.hp-fill {
+    background: linear-gradient(90deg, #8b0000, #ff0000);
 }
 
+.sp-fill {
+    background: linear-gradient(90deg, #003d8f, #0099ff);
+}
 
+/* --- 5. Interactive Elements & Inputs --- */
+.reset-button {
+    width: 300px;
+    padding: 10px;
+    position: absolute;
+    bottom: 30px;
+    left: 25px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #000;
+    background: linear-gradient(180deg, #ffd96a, #c8a94c);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.reset-button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(180deg, #fff2a6, #e0c25c);
+}
+
+select:focus,
+input[type=number]:focus {
+    outline: none;
+    border-color: #00bfff;
+    box-shadow: 0 0 8px rgba(0, 191, 255, 0.5);
+}
+
+/* --- 6. Table Layouts & Hover Effects --- */
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #c8a94c;
+}
+
+.stats-table tr {
+    transition: background 0.3s ease;
+}
+
+.stats-table tr:hover {
+    background: rgba(200, 169, 76, 0.1) !important;
+    cursor: pointer;
+}
+
+.stats-table th {
+    background: #0f1f48;
+    color: #ffd96a;
+    padding: 6px;
+}
+
+.stats-table td {
+    background: #08112b;
+    padding: 6px;
+}
+
+/* --- Layout Containers --- */
+.main-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.left-panel {
+    flex: 0 0 260px;
+    display: flex;   
+    flex-direction: column;
+    gap: 8px;
+    margin-top: -35px; 
+}
+
+.right-panel {
+    flex: 1;
+}
+
+.character-setup {
+    padding: 12px;
+    margin-bottom: 12px;
+    background: #0a1430;
+    border-radius: 10px;
+    border: 1px solid #c8a94c;
+}
 
 .character-setup h3 {
-
     color: #00bfff;
-
 }
-
-
 
 .setup-row {
-
-    display:flex;
-
-    justify-content:space-between;
-
-    margin-bottom:10px;
-
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
 }
-
-
 
 select,
-
-input[type=number]{
-
-    background:#050b1c;
-
-
-
-    border:1px solid #c8a94c;
-
-
-
-    color:#fff;
-
-
-
-    border-radius:4px;
-
-
-
-    padding:4px 6px;
-
-
-
-    text-align:center;
-
+input[type=number] {
+    background: #050b1c;
+    border: 1px solid #c8a94c;
+    color: #fff;
+    border-radius: 4px;
+    padding: 4px 6px;
+    text-align: center;
 }
-
-/* Container for Stats and Status boxes */
 
 .tables-container {
-
-    display:flex;
-
-    gap:15px;
-
-    margin-top:10px;
-
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
 }
 
-
-
-/* Box styling */
-
-.table-box{
-
-    flex:1;
-
-
-
-    background:#0c1635;
-
-
-
-    border:1px solid #c8a94c;
-
-
-
-    border-radius:10px;
-
-
-
-    padding:12px;
-
+.table-box {
+    flex: 1;
+    position: relative;
+    background: #0c1635;
+    border: 1px solid #c8a94c;
+    border-radius: 10px;
+    padding: 12px;
 }
-
-
 
 .table-box h4 {
-
-    margin:5px 0 10px;
-
-    text-align:center;
-
-    color:#00bfff;
-
+    margin: 5px 0 10px;
+    text-align: center;
+    color: #00bfff;
 }
 
-
-
-/* Stats table */
-
-.stats-table {
-
-    width:100%;
-
-    border-collapse:collapse;
-
-    border:1px solid rgba(0,150,255,0.5);
-
+/* --- 8. Switch & Miscellaneous --- */
+.gender-switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    position: relative;
+    top: -5px;
 }
 
-
-
-.stats-table th{
-
-     background:#0f1f48;
-
-     color:#ffd96a;
-
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 28px;
 }
 
-
-
-.stats-table td{
-
-    background:#08112b;
-
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
-
-
-.stats-table tr:hover{
-
-    background:#122a66;
-
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #00bfff;
+    transition: 0.3s;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-
-
-.stats-table th, .stats-table td {
-
-    padding:6px;
-
-    text-align:center;
-
-    border:1px solid rgba(0,150,255,0.5);
-
+.slider:before {
+    content: "";
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background: white;
+    transition: 0.3s;
+    border-radius: 50%;
 }
 
+.gender-symbol {
+    font-size: 20px;
+    font-weight: 900;
+    color: #fff;
+    z-index: 2;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 191, 255, 0.7);
+}
 
+input:checked + .slider {
+    background-color: #ff69b4;
+}
 
-/* Status table */
+input:checked + .slider:before {
+    transform: translateX(30px);
+}
+
+.stat-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    object-fit: contain;
+}
 
 .status-columns {
-
-    display:flex;
-
-    gap:10px;
-
+    display: flex;
+    gap: 10px;
 }
 
-
-
-.status-columns table{
-
-    background:#08112b;
-
+.status-columns table {
+    flex: 1;
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
 }
 
-
-
-.status-columns th, .status-columns td {
-
-    padding:4px 6px;
-
-    text-align:left;
-
-    border:1px solid rgba(0,150,255,0.5);
-
+.status-columns th,
+.status-columns td {
+    padding: 6px 4px;
+    border: 1px solid rgba(0, 150, 255, 0.5);
+    white-space: nowrap;
+    font-size: 13px;
 }
 
-
-
-.status-columns th{
-
-    color:#ffd96a;
-
+.status-columns th {
+    color: #ffd96a;
+    display: flex;
+    align-items: center;
 }
-
-
-
-/* Remaining Points */
 
 .status-points {
-
-    margin-top:6px;
-
-    text-align:center;
-
-    background:rgba(0,0,50,0.15);
-
-    padding:6px;
-
-    font-weight:bold;
-
-    font-size:14px;
-
-    border-top:5px solid rgba(0,150,255,0.5);
-
-    border-radius:0 0 6px 6px;
-
+    margin-top: 30px;
+    text-align: center;
+    background: rgba(0, 0, 50, 0.15);
+    padding: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    border-top: 5px solid rgba(0, 150, 255, 0.5);
+    border-radius: 0 0 6px 6px;
 }
 
-
-
-/* Floating leaves */
-
-.floating-elements {
-
-    position: relative;
-
-    width: 100%;
-
-    height: 100px;
-
-    overflow: hidden;
-
-    margin-top: 4px;
-
-}
-
-
-
-.floating-elements .leaf {
-
-    position: absolute;
-
-    bottom: -20px;
-
-    font-size: 20px;
-
-    opacity: 0.8;
-
-    animation: floatAnime linear infinite;
-
-}
-
-
-
-.floating-elements .leaf:nth-child(1){ left:5%; font-size:22px; animation-duration:8s;}
-
-.floating-elements .leaf:nth-child(2){ left:25%; font-size:18px; animation-duration:10s; animation-delay:1s;}
-
-.floating-elements .leaf:nth-child(3){ left:45%; font-size:20px; animation-duration:9s; animation-delay:2s;}
-
-.floating-elements .leaf:nth-child(4){ left:65%; font-size:24px; animation-duration:11s; animation-delay:1.5s;}
-
-.floating-elements .leaf:nth-child(5){ left:85%; font-size:18px; animation-duration:10s; animation-delay:0.8s;}
-
-
-
-@keyframes floatAnime {
-
-    0% {transform: translateY(0) translateX(0) rotate(0deg);opacity:0;}
-
-    10% {opacity:1;}
-
-    50% {transform: translateY(-60px) translateX(15px) rotate(20deg);}
-
-    70% {transform: translateY(-80px) translateX(-10px) rotate(-10deg);}
-
-    100% {transform: translateY(-120px) translateX(5px) rotate(360deg);opacity:0;}
-
-}
-
-
-
-/* Responsive */
-
-@media screen and (max-width:1000px) {
-
-    .main-layout { flex-direction:column; align-items:center; }
-
-    .tables-container { flex-direction:column; }
-
+@media screen and (max-width: 1000px) {
+    .main-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+    .tables-container {
+        flex-direction: column;
+    }
 }
